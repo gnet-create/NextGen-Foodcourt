@@ -52,7 +52,7 @@ Nextgen Mall’s food court is busy and culturally diverse, but the manual order
 |--------------|-------------------|
 | Frontend     | Next.js           |
 | Backend      | Flask (Python)    |
-| Database     | PostgreSQL        |
+| Database     | SQLite        |
 | API          | REST API          |
 | Authentication | (Optional) JWT or session-based |
 
