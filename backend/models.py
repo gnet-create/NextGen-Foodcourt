@@ -5,18 +5,20 @@ from sqlalchemy.sql import func
 
 from config import db, bcrypt
 
-class Customer(db.Model, SerializerMixin):
-    __tablename__ = 'customers'
-    serialize_rules = ('-orders.customer', '-reservations.customer', '-_password_hash')
+class User(db.Model, SerializerMixin):
+    __tablename__ = 'users'
+    serialize_rules = ('-orders.user', '-reservations.user', '-_password_hash')
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     _password_hash = db.Column(db.String(128), nullable=False)
     phone_no = db.Column(db.Integer)
+    role = db.Column(db.String(20), nullable=False) # 'admin' or 'customer'
 
-    orders = db.relationship('Order', back_populates='customer', cascade='all, delete-orphan')
-    reservations = db.relationship('Reservation', back_populates='customer', cascade='all, delete-orphan')
+
+    orders = db.relationship('Order', back_populates='user', cascade='all, delete-orphan')
+    reservations = db.relationship('Reservation', back_populates='user', cascade='all, delete-orphan')
 
     # Password protection
     @hybrid_property
@@ -33,14 +35,14 @@ class Customer(db.Model, SerializerMixin):
     
     @validates('name')
     def validate_name(self, key, name):
-        existing = Customer.query.filter_by(name=name).first()
+        existing = User.query.filter_by(name=name).first()
         if existing:
             raise ValueError("Username must be unique.")
         return name
     
     @validates('email')
     def validate_email(self, key, email):
-        existing = Customer.query.filter_by(email=email).first()
+        existing = User.query.filter_by(email=email).first()
         if existing:
             raise ValueError("Email must be unique.")
         return email
@@ -95,18 +97,18 @@ class MenuItem(db.Model, SerializerMixin):
 
 class Order(db.Model, SerializerMixin):
     __tablename__ = 'orders'
-    serialize_rules = ('-customer.orders', '-order_items.order', '-reservation.order',)
+    serialize_rules = ('-user.orders', '-order_items.order', '-reservation.order',)
 
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String, nullable=False)
     total_price = db.Column(db.Float, nullable=False, default=0)
-    customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
-    customer = db.relationship('Customer', back_populates='orders')
+    user = db.relationship('User', back_populates='orders')
     order_items = db.relationship('OrderItem', back_populates='order', cascade='all, delete-orphan')
     reservation = db.relationship('Reservation', back_populates='order', uselist=False)
-    
+
     def __repr__(self):
         return f"<Order ID: {self.id}, Status: {self.status}, Total: {self.total_price}>"
 
@@ -141,10 +143,10 @@ class Table(db.Model, SerializerMixin):
 
 class Reservation(db.Model, SerializerMixin):
     __tablename__ = 'reservations'
-    serialize_rules = ('-customer.reservations', '-order.reservation', '-table.reservations',)
+    serialize_rules = ('-user.reservations', '-order.reservation', '-table.reservations',)
 
     id = db.Column(db.Integer, primary_key=True)
-    customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     order_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
     table_id = db.Column(db.Integer, db.ForeignKey('tables.id'))
     booking_time = db.Column(db.DateTime, nullable=False)
@@ -152,10 +154,10 @@ class Reservation(db.Model, SerializerMixin):
     status = db.Column(db.String)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
-    customer = db.relationship('Customer', back_populates='reservations')
+    user = db.relationship('User', back_populates='reservations')
     order = db.relationship('Order', back_populates='reservation')
     table = db.relationship('Table', back_populates='reservations')
-    
+
     def __repr__(self):
         return f"<Reservation ID: {self.id}, Table: {self.table_id}, Status: {self.status}>"
     

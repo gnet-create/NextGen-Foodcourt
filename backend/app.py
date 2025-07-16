@@ -5,7 +5,7 @@ from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 
 from config import app, db, api
-from models import Customer, Cuisine, Outlet, MenuItem, Table, Order, OrderItem, Reservation
+from models import User, Cuisine, Outlet, MenuItem, Table, Order, OrderItem, Reservation
 
 @app.route('/')
 def home():
