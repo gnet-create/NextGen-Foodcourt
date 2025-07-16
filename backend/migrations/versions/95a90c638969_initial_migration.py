@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: 9476899441a0
+Revision ID: 95a90c638969
 Revises: 
-Create Date: 2025-07-16 15:36:13.419199
+Create Date: 2025-07-16 17:06:12.383793
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '9476899441a0'
+revision = '95a90c638969'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,16 +23,6 @@ def upgrade():
     sa.Column('name', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('customers',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=120), nullable=False),
-    sa.Column('email', sa.String(length=120), nullable=False),
-    sa.Column('_password_hash', sa.String(length=128), nullable=False),
-    sa.Column('phone_no', sa.Integer(), nullable=True),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email'),
-    sa.UniqueConstraint('name')
-    )
     op.create_table('tables',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('table_number', sa.Integer(), nullable=False),
@@ -40,13 +30,24 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('table_number')
     )
+    op.create_table('users',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=120), nullable=False),
+    sa.Column('email', sa.String(length=120), nullable=False),
+    sa.Column('_password_hash', sa.String(length=128), nullable=False),
+    sa.Column('phone_no', sa.Integer(), nullable=True),
+    sa.Column('role', sa.String(length=20), nullable=False),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('email'),
+    sa.UniqueConstraint('name')
+    )
     op.create_table('orders',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('status', sa.String(), nullable=False),
     sa.Column('total_price', sa.Float(), nullable=False),
-    sa.Column('customer_id', sa.Integer(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
-    sa.ForeignKeyConstraint(['customer_id'], ['customers.id'], name=op.f('fk_orders_customer_id_customers')),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], name=op.f('fk_orders_user_id_users')),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('outlets',
@@ -69,16 +70,16 @@ def upgrade():
     )
     op.create_table('reservations',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('customer_id', sa.Integer(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('order_id', sa.Integer(), nullable=True),
     sa.Column('table_id', sa.Integer(), nullable=True),
     sa.Column('booking_time', sa.DateTime(), nullable=False),
     sa.Column('no_of_people', sa.Integer(), nullable=True),
     sa.Column('status', sa.String(), nullable=True),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
-    sa.ForeignKeyConstraint(['customer_id'], ['customers.id'], name=op.f('fk_reservations_customer_id_customers')),
     sa.ForeignKeyConstraint(['order_id'], ['orders.id'], name=op.f('fk_reservations_order_id_orders')),
     sa.ForeignKeyConstraint(['table_id'], ['tables.id'], name=op.f('fk_reservations_table_id_tables')),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], name=op.f('fk_reservations_user_id_users')),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('order_items',
@@ -101,7 +102,7 @@ def downgrade():
     op.drop_table('menu_items')
     op.drop_table('outlets')
     op.drop_table('orders')
+    op.drop_table('users')
     op.drop_table('tables')
-    op.drop_table('customers')
     op.drop_table('cuisines')
     # ### end Alembic commands ###

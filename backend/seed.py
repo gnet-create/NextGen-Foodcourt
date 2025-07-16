@@ -1,6 +1,6 @@
 from app import app  
 from config import db
-from models import Customer, Cuisine, Outlet, MenuItem, Table, Order, OrderItem, Reservation
+from models import User, Cuisine, Outlet, MenuItem, Table, Order, OrderItem, Reservation
 from datetime import datetime, timedelta
 
 with app.app_context():
@@ -9,78 +9,74 @@ with app.app_context():
     db.drop_all()
     db.create_all()
 
-    kenyan = Cuisine(name="Kenyan")
-    ethiopian = Cuisine(name="Ethiopian")
-    nigerian = Cuisine(name="Nigerian")
-
-    db.session.add_all([kenyan, ethiopian, nigerian])
-    db.session.commit()
-
-    outlet1 = Outlet(name="Mama Oliech", contact="0711000001", cuisine=kenyan)
-    outlet2 = Outlet(name="Jollof Haven", contact="0711000002", cuisine=nigerian)
-    outlet3 = Outlet(name="Addis Taste", contact="0711000003", cuisine=ethiopian)
-
-    db.session.add_all([outlet1, outlet2, outlet3])
-    db.session.commit()
-
-    item1 = MenuItem(name="Ugali Nyama", description="Staple Kenyan meal", price=350, category="Main", outlet=outlet1)
-    item2 = MenuItem(name="Sukuma Wiki", description="Greens", price=100, category="Side", outlet=outlet1)
-    item3 = MenuItem(name="Jollof Rice", description="Spicy rice", price=500, category="Main", outlet=outlet2)
-    item4 = MenuItem(name="Suya", description="Spicy grilled meat", price=450, category="Snack", outlet=outlet2)
-    item5 = MenuItem(name="Injera", description="Fermented flatbread", price=300, category="Main", outlet=outlet3)
-    item6 = MenuItem(name="Doro Wat", description="Spicy chicken stew", price=600, category="Main", outlet=outlet3)
-
-    db.session.add_all([item1, item2, item3, item4, item5, item6])
-    db.session.commit()
-
-    customer1 = Customer(name="billy", email="billy@example.com", phone_no=254712345678)
+    customer1 = User(name="Alice", email="alice@example.com", phone_no=712345678, role="customer")
     customer1.password_hash = "password123"
 
-    customer2 = Customer(name="Agnes", email="agnes@example.com", phone_no=254701234567)
-    customer2.password_hash = "securepass"
+    customer2 = User(name="Bob", email="bob@example.com", phone_no=722345678, role="customer")
+    customer2.password_hash = "password123"
 
-    db.session.add_all([customer1, customer2])
-    db.session.commit()
+    Admin = User(name="Charlie", email="charlie@example.com", phone_no=732345678, role="admin")
+    Admin.password_hash = "adminpass456"
 
-    table1 = Table(table_number=1, is_available="yes")
-    table2 = Table(table_number=2, is_available="no")
-    table3 = Table(table_number=3, is_available="yes")
+    db.session.add_all([customer1, customer2, Admin])
 
-    db.session.add_all([table1, table2, table3])
-    db.session.commit()
+    italian = Cuisine(name="Italian")
+    chinese = Cuisine(name="Chinese")
+    indian = Cuisine(name="Indian")
+    mexican = Cuisine(name="Mexican")
+    db.session.add_all([italian, chinese, indian, mexican])
 
-    order1 = Order(status="pending", total_price=850, customer=customer1)
-    order2 = Order(status="confirmed", total_price=600, customer=customer2)
+    outlet1 = Outlet(name="Pasta Palace", contact="0700111222", cuisine=italian)
+    outlet2 = Outlet(name="Dragon Express", contact="0700333444", cuisine=chinese)
+    outlet3 = Outlet(name="Curry Hut", contact="0700555666", cuisine=indian)
+    outlet4 = Outlet(name="Taco Town", contact="0700777888", cuisine=mexican)
+    db.session.add_all([outlet1, outlet2, outlet3, outlet4])
 
-    db.session.add_all([order1, order2])
-    db.session.commit()
+    item1 = MenuItem(name="Spaghetti", description="Classic spaghetti with tomato sauce", price=800, category="Main", outlet=outlet1)
+    item2 = MenuItem(name="Lasagna", description="Layered pasta with cheese and meat", price=950, category="Main", outlet=outlet1)
+    item3 = MenuItem(name="Fried Rice", description="Fried rice with vegetables", price=600, category="Main", outlet=outlet2)
+    item4 = MenuItem(name="Sweet and Sour Chicken", description="Chicken with tangy sauce", price=700, category="Main", outlet=outlet2)
+    item5 = MenuItem(name="Chicken Tikka", description="Spiced grilled chicken", price=850, category="Main", outlet=outlet3)
+    item6 = MenuItem(name="Naan Bread", description="Soft Indian flatbread", price=150, category="Side", outlet=outlet3)
+    item7 = MenuItem(name="Beef Taco", description="Soft taco with seasoned beef", price=300, category="Main", outlet=outlet4)
+    item8 = MenuItem(name="Quesadilla", description="Grilled cheese tortilla", price=500, category="Main", outlet=outlet4)
+    db.session.add_all([item1, item2, item3, item4, item5, item6, item7, item8])
 
-    oi1 = OrderItem(order=order1, menu_item=item1, quantity=2, sub_total=700)
-    oi2 = OrderItem(order=order1, menu_item=item2, quantity=1, sub_total=150)
-    oi3 = OrderItem(order=order2, menu_item=item5, quantity=2, sub_total=600)
+    table1 = Table(table_number=1, is_available="Yes")
+    table2 = Table(table_number=2, is_available="Yes")
+    table3 = Table(table_number=3, is_available="Yes")
+    table4 = Table(table_number=4, is_available="No")
+    db.session.add_all([table1, table2, table3, table4])
 
-    db.session.add_all([oi1, oi2, oi3])
-    db.session.commit()
+    print("Creating orders and reservations...")
 
-    res1 = Reservation(
-        customer=customer1,
+    order1 = Order(status="Pending", total_price=950, user=customer1)
+    db.session.add(order1)
+    order_item1 = OrderItem(order=order1, menu_item=item2, quantity=1, sub_total=950)
+    db.session.add(order_item1)
+    reservation1 = Reservation(
+        user=customer1,
         order=order1,
         table=table1,
-        booking_time=datetime.now() + timedelta(minutes=20),
+        booking_time=datetime.now() + timedelta(minutes=25),
         no_of_people=2,
-        status="pending"
+        status="Confirmed"
     )
+    db.session.add(reservation1)
 
-    res2 = Reservation(
-        customer=customer2,
+    order2 = Order(status="Confirmed", total_price=1200, user=customer2)
+    db.session.add(order2)
+    order_item2 = OrderItem(order=order2, menu_item=item3, quantity=2, sub_total=1200)
+    db.session.add(order_item2)
+    reservation2 = Reservation(
+        user=customer2,
         order=order2,
         table=table2,
         booking_time=datetime.now() + timedelta(minutes=25),
-        no_of_people=1,
-        status="confirmed"
+        no_of_people=3,
+        status="Confirmed"
     )
+    db.session.add(reservation2)
 
-    db.session.add_all([res1, res2])
     db.session.commit()
-
-    print("Done seeding!")
+    print("Seed data added successfully.")
