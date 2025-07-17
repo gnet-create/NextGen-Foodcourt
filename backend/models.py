@@ -14,9 +14,9 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     _password_hash = db.Column(db.String(128), nullable=False)
     phone_no = db.Column(db.Integer)
-    role = db.Column(db.String(20), nullable=False) # 'admin' or 'customer'
+    role = db.Column(db.String(20), nullable=False) # 'outlet owner' or 'customer'
 
-
+    outlets = db.relationship('Outlet', back_populates='owner', cascade='all, delete-orphan')
     orders = db.relationship('Order', back_populates='user', cascade='all, delete-orphan')
     reservations = db.relationship('Reservation', back_populates='user', cascade='all, delete-orphan')
 
@@ -71,7 +71,9 @@ class Outlet(db.Model, SerializerMixin):
     name = db.Column(db.String)
     contact = db.Column(db.String)
     cuisine_id = db.Column(db.Integer, db.ForeignKey('cuisines.id'))
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
+    owner = db.relationship('User', back_populates='outlets')
     cuisine = db.relationship('Cuisine', back_populates='outlets')
     menu_items = db.relationship('MenuItem', back_populates='outlet', cascade='all, delete-orphan')
     
