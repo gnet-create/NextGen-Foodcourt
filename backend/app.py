@@ -128,7 +128,7 @@ class CuisineDetails(Resource):
 class OutletLists(Resource):
     def get(self):
         outlets = Outlet.query.all()
-        return [outlet.to_dict(rules=('-cuisine.outlets', '-menu_items.outlet', '-owner.outlets')) for outlet in outlets]   
+        return [outlet.to_dict(rules=('-cuisine', '-menu_items', '-owner',)) for outlet in outlets]   
 
     def post(self):
        data = request.get_json()
@@ -181,7 +181,7 @@ class OutletDetails(Resource):
 class MenuItemLists(Resource):
     def get(self):
         items = MenuItem.query.all()
-        return [item.to_dict(rules=('-outlet.menu_items', '-order_items.menu_item')) for item in items]
+        return [item.to_dict(rules=('-outlet', '-order_items',)) for item in items]
 
     def post(self):
         data = request.get_json()
@@ -205,7 +205,7 @@ class MenuItemDetails(Resource):
         item = MenuItem.query.get(id)
         if not item:
             return {"error": "Menu item not found."}, 404
-        return item.to_dict(rules=('-outlet.menu_items', '-order_items.menu_item'))
+        return item.to_dict(rules=('-outlet', '-order_items',))
     
     def patch(self, id):
         item = MenuItem.query.get(id)
@@ -237,7 +237,7 @@ class MenuItemDetails(Resource):
 class OrderLists(Resource):
     def get(self):
         orders = Order.query.all()
-        return [order.to_dict(rules=('-reservation.order', '-order_items.order')) for order in orders]
+        return [order.to_dict(rules=('-reservation', '-order_items','-user',)) for order in orders]
 
     def post(self):
         data = request.get_json()
@@ -259,7 +259,7 @@ class OrderDetails(Resource):
         order = Order.query.get(id)
         if not order:
             return {"error": "Order not found."}, 404
-        return order.to_dict(rules=('-reservation.order', '-order_items.order'))
+        return order.to_dict(rules=('-reservation', '-order_items','-user-',))
     
     def patch(self, id):
         order = Order.query.get(id)
