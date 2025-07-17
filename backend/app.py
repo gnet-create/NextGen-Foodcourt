@@ -3,65 +3,126 @@
 from flask import request, session
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
-from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
+from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity,  get_jwt
 
-from config import app, db, api, jwt
+from config import app, db, api, jwt, jwt_blacklist
 from models import User, Cuisine, Outlet, MenuItem, Table, Order, OrderItem, Reservation
 
 @app.route('/')
 def home():
     return "<h1>Welcome to NextGen Food Court APIs</h1>"
-   
-    
+     
 # ------------------ AUTH ------------------ #
 class Register(Resource):
     def post(self):
-        pass
+        data = request.get_json()
+        try:
+            user = User(
+                name=data['name'],
+                email=data['email'],
+                phone_no=data['phone_no'],
+                role=data['role']
+            )
+            user.password_hash = data['password']
+            db.session.add(user)
+            db.session.commit()
+            return {"message": "User registered successfully"}, 201
+        except IntegrityError:
+            db.session.rollback()
+            return {"message": "User already exists"}, 400
 
 class Login(Resource):
     def post(self):
-        pass
+        data = request.get_json()
+        user = User.query.filter_by(email=data['email']).first()
+        if user and user.authenticate(data['password']):
+            access_token = create_access_token(identity={'id': user.id, 'role': user.role})
+            return {"access_token": access_token, "user": user.to_dict(rules=('-orders', '-reservations', '-outlets'))}, 200
+        return {"message": "Invalid credentials"}, 401
     
 class Logout(Resource):
-    def delete(self):
-        pass
+    @jwt_required()
+    def post(self):
+        jti = get_jwt()["jti"] 
+        jwt_blacklist.add(jti)
+        return {"message": "Successfully logged out"}, 200
 
 class CheckAuth(Resource):
+    @jwt_required()
     def get(self):
-        pass
+        user_identity = get_jwt_identity()
+        return {"message": "Authenticated", "user": user_identity}, 200
 
 # ------------------ USERS ------------------ #
 class UserLists(Resource):
+    @jwt_required()
     def get(self):
-        pass
+        return [user.to_dict(rules=('-orders', '-reservations', '-outlets')) for user in User.query.all()]
 
 class UserDetails(Resource):
+    @jwt_required()
     def get(self, id):
-       pass
+        user = User.query.get(id)
+        return user.to_dict(rules=('-orders', '-reservations', '-outlets'))
 
+    @jwt_required()
     def patch(self, id):
-        pass
+        data = request.get_json()
+        user = User.query.get(id)
+        
+        if not user:
+            return {"error": "User not found."}, 404
+        
+        if 'name' in data:
+            user.name = data['name']
+        if 'email' in data:
+            user.email = data['email']
+        if 'phone_no' in data:
+            user.phone_no = data['phone_no']
+            
+        db.session.commit()
+        return user.to_dict(rules=('-orders', '-reservations', '-outlets')) 
     
+    @jwt_required()
     def delete(self, id):
-       pass
+       user = User.query.get(id)
+       db.session.delete(user)
+       db.session.commit()
+       return {"message": "User deleted Successfully"}
 
 # ------------------ CUISINES ------------------ #
 class CuisineList(Resource):
     def get(self):
-        pass
+        return [cuisine.to_dict(rules=('-outlets',)) for cuisine in Cuisine.query.all()]
     
     def post(self):
-        pass
+        data = request.get_json()
+        cuisine = Cuisine(name=data['name'])
+        db.session.add(cuisine)
+        db.session.commit()
+        return cuisine.to_dict(rules=('-outlets',)), 201
     
 class CuisineDetails(Resource):
     def get(self, id):
-        pass
+        return Cuisine.query.get(id).to_dict(rules=('-outlets',))
 
     def patch(self, id):
-        pass
-
+        data = request.get_json()
+        cuisine = Cuisine.query.get(id)
+        
+        if not cuisine:
+            return {"error": "Cuisine not found."}, 404
+        
+        if 'name' in data:
+            cuisine.name = data['name']
+        db.session.commit()
+        return cuisine.to_dict(rules=('-outlets',))
+            
     def delete(self, id):
-        pass
+        cuisine = Cuisine.query.get(id)
+        db.session.delete(cuisine)
+        db.session.commit()
+        return {"message": "Cuisine deleted successfully"}
 
 # ------------------ OUTLETS ------------------ #
 class OutletLists(Resource):
@@ -174,6 +235,8 @@ class ReservationDetails(Resource):
 # ------------------ ROUTES ------------------ #
 api.add_resource(Register, '/register')
 api.add_resource(Login, '/login')
+api.add_resource(Logout, '/logout')
+api.add_resource(CheckAuth, '/check-auth')
 
 api.add_resource(UserLists, '/users')
 api.add_resource(UserDetails, '/users/<int:id>')
