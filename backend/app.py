@@ -127,56 +127,159 @@ class CuisineDetails(Resource):
 # ------------------ OUTLETS ------------------ #
 class OutletLists(Resource):
     def get(self):
-        pass
+        outlets = Outlet.query.all()
+        return [outlet.to_dict(rules=('-cuisine', '-menu_items', '-owner',)) for outlet in outlets]   
 
     def post(self):
-       pass
+       data = request.get_json()
+       try:
+           outlet = Outlet(
+               name=data['name'],
+               contact=data['contact'],
+               cuisine_id=data['cuisine_id'],
+               owner_id=data['owner_id']
+           )
+           db.session.add(outlet)
+           db.session.commit()
+           return outlet.to_dict(rules=('-cuisine.outlets', '-menu_items.outlet', '-owner.outlets')), 201
+       except IntegrityError:
+           db.session.rollback()
+           return {"message": "Outlet already exists or invalid data"}, 400
 
 class OutletDetails(Resource):
     def get(self, id):
-        pass
+        outlet = Outlet.query.get(id)
+        if not outlet:
+            return {"error": "Outlet not found."}, 404
+        return outlet.to_dict(rules=('-cuisine.outlets', '-menu_items.outlet', '-owner.outlets'))
 
     def patch(self, id):
-       pass
+       outlet = Outlet.query.get(id)
+       if not outlet:
+           return {"error": "Outlet not found."}, 404
+       data = request.get_json()
+       if 'name' in data:
+           outlet.name = data['name']
+       if 'contact' in data:
+           outlet.contact = data['contact']
+       if 'cuisine_id' in data:
+           outlet.cuisine_id = data['cuisine_id']
+       if 'owner_id' in data:
+           outlet.owner_id = data['owner_id']
+       db.session.commit()
+       return outlet.to_dict(rules=('-cuisine.outlets', '-menu_items.outlet', '-owner.outlets'))
 
     def delete(self, id):
-       pass
+       outlet = Outlet.query.get(id)
+       if not outlet:
+           return {"error": "Outlet not found."}, 404
+       db.session.delete(outlet)
+       db.session.commit()
+       return {"message": "Outlet deleted successfully"}
 
 # ------------------ MENU ITEMS ------------------ #
 class MenuItemLists(Resource):
     def get(self):
-        pass
+        items = MenuItem.query.all()
+        return [item.to_dict(rules=('-outlet', '-order_items',)) for item in items]
 
     def post(self):
-        pass
+        data = request.get_json()
+        try:
+            item = MenuItem(
+                name=data['name'],
+                description=data['description'],
+                price=data['price'],
+                category=data['category'],
+                outlet_id=data['outlet_id']
+            )
+            db.session.add(item)
+            db.session.commit()
+            return item.to_dict(rules=('-outlet.menu_items', '-order_items.menu_item')), 201
+        except IntegrityError:
+            db.session.rollback()
+            return {"message": "Menu item already exists or invalid data"}, 400
 
 class MenuItemDetails(Resource):
     def get(self, id):
-        pass
+        item = MenuItem.query.get(id)
+        if not item:
+            return {"error": "Menu item not found."}, 404
+        return item.to_dict(rules=('-outlet', '-order_items',))
     
     def patch(self, id):
-        pass
+        item = MenuItem.query.get(id)
+        if not item:
+            return {"error": "Menu item not found."}, 404
+        data = request.get_json()
+        if 'name' in data:
+            item.name = data['name']
+        if 'description' in data:
+            item.description = data['description']
+        if 'price' in data:
+            item.price = data['price']
+        if 'category' in data:
+            item.category = data['category']
+        if 'outlet_id' in data:
+            item.outlet_id = data['outlet_id']
+        db.session.commit()
+        return item.to_dict(rules=('-outlet.menu_items', '-order_items.menu_item'))
     
     def delete(self, id):
-        pass
+        item = MenuItem.query.get(id)
+        if not item:
+            return {"error": "Menu item not found."}, 404
+        db.session.delete(item)
+        db.session.commit()
+        return {"message": "Menu item deleted successfully"}
 
 # ------------------ ORDERS ------------------ #
 class OrderLists(Resource):
     def get(self):
-        pass
+        orders = Order.query.all()
+        return [order.to_dict(rules=('-reservation', '-order_items','-user',)) for order in orders]
 
     def post(self):
-        pass
+        data = request.get_json()
+        try:
+            order = Order(
+                user_id=data['user_id'],
+                total_price=data['total_price'],
+                status=data.get('status', 'pending')
+            )
+            db.session.add(order)
+            db.session.commit()
+            return order.to_dict(rules=('-reservation.order', '-order_items.order')), 201
+        except IntegrityError:
+            db.session.rollback()
+            return {"message": "Order already exists or invalid data"}, 400
 
 class OrderDetails(Resource):
     def get(self, id):
-        pass
+        order = Order.query.get(id)
+        if not order:
+            return {"error": "Order not found."}, 404
+        return order.to_dict(rules=('-reservation', '-order_items','-user-',))
     
     def patch(self, id):
-       pass
+        order = Order.query.get(id)
+        if not order:
+            return {"error": "Order not found."}, 404
+        data = request.get_json()
+        if 'status' in data:
+            order.status = data['status']
+        if 'total_price' in data:
+            order.total_price = data['total_price']
+        db.session.commit()
+        return order.to_dict(rules=('-reservation.order', '-order_items.order'))
 
     def delete(self, id):
-        pass
+        order = Order.query.get(id)
+        if not order:
+            return {"error": "Order not found."}, 404
+        db.session.delete(order)
+        db.session.commit()
+        return {"message": "Order deleted successfully"}
 
 # ------------------ ORDER ITEMS ------------------ #
 class OrderItemLists(Resource):
