@@ -141,7 +141,7 @@ class OutletLists(Resource):
            )
            db.session.add(outlet)
            db.session.commit()
-           return outlet.to_dict(rules=('-cuisine.outlets', '-menu_items.outlet', '-owner.outlets')), 201
+           return outlet.to_dict(rules=('-cuisine', '-menu_items', '-owner',)), 201
        except IntegrityError:
            db.session.rollback()
            return {"message": "Outlet already exists or invalid data"}, 400
@@ -151,7 +151,7 @@ class OutletDetails(Resource):
         outlet = Outlet.query.get(id)
         if not outlet:
             return {"error": "Outlet not found."}, 404
-        return outlet.to_dict(rules=('-cuisine.outlets', '-menu_items.outlet', '-owner.outlets'))
+        return outlet.to_dict(rules=('-cuisine', '-menu_items', '-owner'))
 
     def patch(self, id):
        outlet = Outlet.query.get(id)
@@ -195,7 +195,7 @@ class MenuItemLists(Resource):
             )
             db.session.add(item)
             db.session.commit()
-            return item.to_dict(rules=('-outlet.menu_items', '-order_items.menu_item')), 201
+            return item.to_dict(rules=('-outlet', '-order_items')), 201
         except IntegrityError:
             db.session.rollback()
             return {"message": "Menu item already exists or invalid data"}, 400
@@ -223,7 +223,7 @@ class MenuItemDetails(Resource):
         if 'outlet_id' in data:
             item.outlet_id = data['outlet_id']
         db.session.commit()
-        return item.to_dict(rules=('-outlet.menu_items', '-order_items.menu_item'))
+        return item.to_dict(rules=('-outlet', '-order_items',))
     
     def delete(self, id):
         item = MenuItem.query.get(id)
@@ -249,7 +249,7 @@ class OrderLists(Resource):
             )
             db.session.add(order)
             db.session.commit()
-            return order.to_dict(rules=('-reservation.order', '-order_items.order')), 201
+            return order.to_dict(rules=('-reservation', '-order_items', '-user-',)), 201
         except IntegrityError:
             db.session.rollback()
             return {"message": "Order already exists or invalid data"}, 400
@@ -271,7 +271,7 @@ class OrderDetails(Resource):
         if 'total_price' in data:
             order.total_price = data['total_price']
         db.session.commit()
-        return order.to_dict(rules=('-reservation.order', '-order_items.order'))
+        return order.to_dict(rules=('-reservation', '-order_items', '-user-',))
 
     def delete(self, id):
         order = Order.query.get(id)
