@@ -283,7 +283,6 @@ class OrderDetails(Resource):
 
 # ------------------ ORDER ITEMS ------------------ #
 class OrderItemLists(Resource):
-    @jwt_required()
     def get(self):
         order_items = OrderItem.query.all()
         return [
@@ -291,7 +290,6 @@ class OrderItemLists(Resource):
             for order_item in order_items
         ]
 
-    @jwt_required()
     def post(self):
         data = request.get_json()
         try:
@@ -309,14 +307,12 @@ class OrderItemLists(Resource):
             return {"message": "Invalid order item data"}, 400
 
 class OrderItemDetails(Resource):
-    @jwt_required()
     def get(self, id):
         order_item = OrderItem.query.get(id)
         if not order_item:
             return {"error": "Order item not found."}, 404
         return order_item.to_dict(rules=('-order', '-menu_item'))
 
-    @jwt_required()
     def patch(self, id):
         order_item = OrderItem.query.get(id)
         if not order_item:
@@ -331,7 +327,6 @@ class OrderItemDetails(Resource):
         db.session.commit()
         return order_item.to_dict(rules=('-order.order_items', '-menu_item.order_items'))
 
-    @jwt_required()
     def delete(self, id):
         order_item = OrderItem.query.get(id)
         if not order_item:
@@ -343,7 +338,6 @@ class OrderItemDetails(Resource):
 
 # ------------------ TABLES ------------------ #
 class TableLists(Resource):
-    @jwt_required()
     def get(self):
         tables = Table.query.all()
         return [
@@ -351,7 +345,6 @@ class TableLists(Resource):
             for table in tables
         ]
 
-    @jwt_required()
     def post(self):
         data = request.get_json()
         try:
@@ -369,14 +362,12 @@ class TableLists(Resource):
             return {"message": "Table creation failed"}, 400
 
 class TableDetails(Resource):
-    @jwt_required()
     def get(self, id):
         table = Table.query.get(id)
         if not table:
             return {"error": "Table not found."}, 404
         return table.to_dict(rules=('-outlet', '-reservations'))
 
-    @jwt_required()
     def patch(self, id):
         table = Table.query.get(id)
         if not table:
@@ -395,7 +386,6 @@ class TableDetails(Resource):
         db.session.commit()
         return table.to_dict(rules=('-outlet.tables', '-reservations'))
 
-    @jwt_required()
     def delete(self, id):
         table = Table.query.get(id)
         if not table:
@@ -407,7 +397,6 @@ class TableDetails(Resource):
 
 # ------------------ RESERVATIONS ------------------ #
 class ReservationLists(Resource):
-    @jwt_required()
     def get(self):
         reservations = Reservation.query.all()
         return [
@@ -415,7 +404,6 @@ class ReservationLists(Resource):
             for reservation in reservations
         ]
 
-    @jwt_required()
     def post(self):
         data = request.get_json()
         try:
@@ -445,14 +433,12 @@ class ReservationLists(Resource):
             return {"message": "Reservation creation failed"}, 400
 
 class ReservationDetails(Resource):
-    @jwt_required()
     def get(self, id):
         reservation = Reservation.query.get(id)
         if not reservation:
             return {"error": "Reservation not found."}, 404
         return reservation.to_dict(rules=('-user', '-table', '-order'))
 
-    @jwt_required()
     def patch(self, id):
         reservation = Reservation.query.get(id)
         if not reservation:
@@ -487,7 +473,6 @@ class ReservationDetails(Resource):
         db.session.commit()
         return reservation.to_dict(rules=('-user.reservations', '-table.reservations', '-order'))
 
-    @jwt_required()
     def delete(self, id):
         reservation = Reservation.query.get(id)
         if not reservation:
