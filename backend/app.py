@@ -283,58 +283,224 @@ class OrderDetails(Resource):
 
 # ------------------ ORDER ITEMS ------------------ #
 class OrderItemLists(Resource):
+    @jwt_required()
     def get(self):
-        pass
+        order_items = OrderItem.query.all()
+        return [
+            order_item.to_dict(rules=('-order', '-menu_item')) 
+            for order_item in order_items
+        ]
 
+    @jwt_required()
     def post(self):
-        pass
+        data = request.get_json()
+        try:
+            order_item = OrderItem(
+                order_id=data['order_id'],
+                menu_item_id=data['menu_item_id'],
+                quantity=data.get('quantity', 1),
+                subtotal=data.get('subtotal')
+            )
+            db.session.add(order_item)
+            db.session.commit()
+            return order_item.to_dict(rules=('-order.order_items', '-menu_item.order_items')), 201
+        except IntegrityError:
+            db.session.rollback()
+            return {"message": "Invalid order item data"}, 400
 
 class OrderItemDetails(Resource):
+    @jwt_required()
     def get(self, id):
-        pass
+        order_item = OrderItem.query.get(id)
+        if not order_item:
+            return {"error": "Order item not found."}, 404
+        return order_item.to_dict(rules=('-order', '-menu_item'))
 
+    @jwt_required()
     def patch(self, id):
-       pass
-   
+        order_item = OrderItem.query.get(id)
+        if not order_item:
+            return {"error": "Order item not found."}, 404
+        
+        data = request.get_json()
+        if 'quantity' in data:
+            order_item.quantity = data['quantity']
+        if 'subtotal' in data:
+            order_item.subtotal = data['subtotal']
+        
+        db.session.commit()
+        return order_item.to_dict(rules=('-order.order_items', '-menu_item.order_items'))
+
+    @jwt_required()
     def delete(self, id):
-       pass
+        order_item = OrderItem.query.get(id)
+        if not order_item:
+            return {"error": "Order item not found."}, 404
+        
+        db.session.delete(order_item)
+        db.session.commit()
+        return {"message": "Order item deleted successfully"}
 
 # ------------------ TABLES ------------------ #
 class TableLists(Resource):
+    @jwt_required()
     def get(self):
-        pass
+        tables = Table.query.all()
+        return [
+            table.to_dict(rules=('-outlet', '-reservations')) 
+            for table in tables
+        ]
 
+    @jwt_required()
     def post(self):
-        pass
+        data = request.get_json()
+        try:
+            table = Table(
+                outlet_id=data['outlet_id'],
+                table_number=data['table_number'],
+                capacity=data['capacity'],
+                status=data.get('status', 'available')
+            )
+            db.session.add(table)
+            db.session.commit()
+            return table.to_dict(rules=('-outlet.tables', '-reservations')), 201
+        except IntegrityError:
+            db.session.rollback()
+            return {"message": "Table creation failed"}, 400
 
 class TableDetails(Resource):
+    @jwt_required()
     def get(self, id):
-        pass
+        table = Table.query.get(id)
+        if not table:
+            return {"error": "Table not found."}, 404
+        return table.to_dict(rules=('-outlet', '-reservations'))
 
+    @jwt_required()
     def patch(self, id):
-       pass
+        table = Table.query.get(id)
+        if not table:
+            return {"error": "Table not found."}, 404
+        
+        data = request.get_json()
+        if 'table_number' in data:
+            table.table_number = data['table_number']
+        if 'capacity' in data:
+            table.capacity = data['capacity']
+        if 'status' in data:
+            table.status = data['status']
+        if 'outlet_id' in data:
+            table.outlet_id = data['outlet_id']
+        
+        db.session.commit()
+        return table.to_dict(rules=('-outlet.tables', '-reservations'))
 
+    @jwt_required()
     def delete(self, id):
-       pass
+        table = Table.query.get(id)
+        if not table:
+            return {"error": "Table not found."}, 404
+        
+        db.session.delete(table)
+        db.session.commit()
+        return {"message": "Table deleted successfully"}
 
 # ------------------ RESERVATIONS ------------------ #
 class ReservationLists(Resource):
-    
+    @jwt_required()
     def get(self):
-        pass
+        reservations = Reservation.query.all()
+        return [
+            reservation.to_dict(rules=('-user', '-table', '-order')) 
+            for reservation in reservations
+        ]
 
+    @jwt_required()
     def post(self):
-        pass
+        data = request.get_json()
+        try:
+            # Check table availability
+            table = Table.query.get(data['table_id'])
+            if table.status != 'available':
+                return {"error": "Table is not available for reservation"}, 400
+
+            reservation = Reservation(
+                user_id=data['user_id'],
+                table_id=data['table_id'],
+                reservation_date=data['reservation_date'],
+                reservation_time=data['reservation_time'],
+                status=data.get('status', 'confirmed'),
+                party_size=data.get('party_size', 1)
+            )
+            
+            # Update table status
+            table.status = 'reserved'
+            
+            db.session.add(reservation)
+            db.session.commit()
+            
+            return reservation.to_dict(rules=('-user.reservations', '-table.reservations', '-order')), 201
+        except IntegrityError:
+            db.session.rollback()
+            return {"message": "Reservation creation failed"}, 400
 
 class ReservationDetails(Resource):
+    @jwt_required()
     def get(self, id):
-       pass
+        reservation = Reservation.query.get(id)
+        if not reservation:
+            return {"error": "Reservation not found."}, 404
+        return reservation.to_dict(rules=('-user', '-table', '-order'))
 
-    def put(self, id):
-       pass
-   
+    @jwt_required()
+    def patch(self, id):
+        reservation = Reservation.query.get(id)
+        if not reservation:
+            return {"error": "Reservation not found."}, 404
+        
+        data = request.get_json()
+        
+        # Check if changing table
+        if 'table_id' in data:
+            # Release old table
+            if reservation.table:
+                reservation.table.status = 'available'
+            
+            # Assign new table
+            new_table = Table.query.get(data['table_id'])
+            if new_table.status != 'available':
+                return {"error": "New table is not available"}, 400
+            
+            new_table.status = 'reserved'
+            reservation.table_id = data['table_id']
+        
+        # Update other fields
+        if 'reservation_date' in data:
+            reservation.reservation_date = data['reservation_date']
+        if 'reservation_time' in data:
+            reservation.reservation_time = data['reservation_time']
+        if 'status' in data:
+            reservation.status = data['status']
+        if 'party_size' in data:
+            reservation.party_size = data['party_size']
+        
+        db.session.commit()
+        return reservation.to_dict(rules=('-user.reservations', '-table.reservations', '-order'))
+
+    @jwt_required()
     def delete(self, id):
-       pass
+        reservation = Reservation.query.get(id)
+        if not reservation:
+            return {"error": "Reservation not found."}, 404
+        
+        # Release the table
+        if reservation.table:
+            reservation.table.status = 'available'
+        
+        db.session.delete(reservation)
+        db.session.commit()
+        return {"message": "Reservation deleted successfully"}
+
 # ------------------ ROUTES ------------------ #
 api.add_resource(Register, '/register')
 api.add_resource(Login, '/login')
