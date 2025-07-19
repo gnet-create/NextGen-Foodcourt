@@ -69,7 +69,7 @@ export default function Checkout() {
   };
 
   const getDeliveryFee = () => {
-    return getTotalPrice() > 1000 ? 0 : 100; 
+    return getTotalPrice() > 1000 ? 0 : 100; // Free delivery over KSh 1000
   };
 
   const getFinalTotal = () => {
@@ -90,10 +90,10 @@ export default function Checkout() {
     }
 
     alert(`Order submitted successfully!\n\nOrder Summary:\n${cart.map(item => `${item.quantity}x ${item.name} from ${item.restaurantName}`).join('\n')}\n\nTotal: KSh ${getFinalTotal().toLocaleString()}\nPayment: ${paymentMethod.toUpperCase()}\n\nYour order will be ready in 15-20 minutes!`);
-   
+    
     setCart([]);
     localStorage.removeItem('foodCourtCart');
-  
+    
     router.push('/');
   };
 
@@ -173,7 +173,7 @@ export default function Checkout() {
             ))}
           </div>
 
-          
+          {/* Price Breakdown */}
           <div className="border-t border-gray-200 pt-4 space-y-2">
             <div className="flex justify-between">
               <span>Subtotal:</span>
@@ -190,11 +190,12 @@ export default function Checkout() {
               <span className="text-green-600">KSh {getFinalTotal().toLocaleString()}</span>
             </div>
             {getDeliveryFee() === 0 && (
-              <p className="text-sm text-green-600">You qualify for free delivery!</p>
+              <p className="text-sm text-green-600">🎉 You qualify for free delivery!</p>
             )}
           </div>
         </div>
 
+        {/* Customer Information & Payment */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-6">Customer Information</h2>
           

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-
+import { ShoppingCart, Moon, Sun, Utensils } from 'lucide-react';
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -19,11 +19,9 @@ export default function Navigation() {
   ];
 
   useEffect(() => {
-
     const userType = localStorage.getItem('userType');
     setIsOwnerLoggedIn(userType === 'owner');
     setIsLoggedIn(!!userType);
-    
     
     const savedCart = localStorage.getItem('foodCourtCart');
     if (savedCart) {
@@ -32,13 +30,11 @@ export default function Navigation() {
       setCartCount(totalItems);
     }
     
-  
     const darkMode = localStorage.getItem('darkMode') === 'true';
     setIsDarkMode(darkMode);
     if (darkMode) {
       document.documentElement.classList.add('dark');
     }
-    
     
     const handleStorageChange = () => {
       const savedCart = localStorage.getItem('foodCourtCart');
@@ -73,8 +69,7 @@ export default function Navigation() {
         <div className="flex justify-between items-center h-18">
           <Link href="/" className="flex items-center space-x-3">
             <div className="bg-gradient-to-r from-orange-500 to-red-500 p-2 rounded-full">
-              <span className="text-white text-2xl">Utensils</span>
-
+              <Utensils className="w-8 h-8 text-white" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
               FoodCourt Hub
@@ -107,12 +102,11 @@ export default function Navigation() {
               Sign Up
             </Link>
             
-           
             <Link
               href="/checkout"
               className="relative p-2 text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
             >
-               <span className="w-6 h-6 text-xl">🛒</span>
+              <ShoppingCart className="w-6 h-6" />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
                   {cartCount}
@@ -120,15 +114,11 @@ export default function Navigation() {
               )}
             </Link>
             
-           
             <button
               onClick={toggleDarkMode}
               className="p-2 text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
             >
-            <span className="w-6 h-6 text-xl">
-             {isDarkMode ? '☀️' : '🌙'}
-            </span>
-
+              {isDarkMode ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
             </button>
             
             {isOwnerLoggedIn && (
@@ -146,13 +136,11 @@ export default function Navigation() {
           </div>
 
           <div className="md:hidden flex items-center space-x-4">
-           
             <Link
               href="/checkout"
               className="relative p-2 text-gray-700 dark:text-gray-300"
             >
-              <span className="text-xl">🛒</span>
-
+              <ShoppingCart className="w-6 h-6" />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
                   {cartCount}
@@ -160,15 +148,11 @@ export default function Navigation() {
               )}
             </Link>
             
-           
             <button
               onClick={toggleDarkMode}
               className="p-2 text-gray-700 dark:text-gray-300"
             >
-            <span className="text-lg">
-              {isDarkMode ? '☀️' : '🌙'}
-            </span>
-
+              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
             
             <select

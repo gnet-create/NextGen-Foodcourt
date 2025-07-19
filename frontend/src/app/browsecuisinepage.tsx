@@ -58,7 +58,7 @@ export default function BrowseCuisines() {
     }
     
     setCart(newCart);
- 
+    // Save to localStorage
     localStorage.setItem('foodCourtCart', JSON.stringify(newCart));
   };
 
@@ -87,10 +87,11 @@ export default function BrowseCuisines() {
       alert('Please add items to your cart first!');
       return;
     }
-    
+    // Redirect to checkout page
     window.location.href = '/checkout';
   };
 
+  // Load cart from localStorage on component mount
   useEffect(() => {
     const savedCart = localStorage.getItem('foodCourtCart');
     if (savedCart) {
@@ -145,6 +146,7 @@ export default function BrowseCuisines() {
         </div>
       </div>
 
+      {/* Restaurant Selection for Selected Cuisine */}
       {selectedCuisine && restaurantsForCuisine.length > 1 && (
         <div className="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
@@ -170,6 +172,7 @@ export default function BrowseCuisines() {
         </div>
       )}
 
+      {/* Menu Display */}
       {selectedCuisine && (selectedRestaurant || restaurantsForCuisine.length === 1) && (
         <div className="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
