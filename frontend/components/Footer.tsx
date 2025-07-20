@@ -5,7 +5,7 @@ import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react'
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 dark:bg-black text-white mt-16">
+    <footer className="bg-gray-900 text-white mt-16">
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid md:grid-cols-4 gap-8">
           {/* Brand Section */}
@@ -34,17 +34,17 @@ export default function Footer() {
             <h4 className="text-xl font-semibold mb-4 text-orange-400">Quick Links</h4>
             <ul className="space-y-3">
               <li>
-                <Link href="/" className="text-gray-400 hover:text-white transition-colors text-lg">
+                <Link href="/" className="text-gray-400 hover:text-white text-lg">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/order" className="text-gray-400 hover:text-white transition-colors text-lg">
+                <Link href="/order" className="text-gray-400 hover:text-white text-lg">
                   Place Order
                 </Link>
               </li>
               <li>
-                <Link href="/reservations" className="text-gray-400 hover:text-white transition-colors text-lg">
+                <Link href="/reservations" className="text-gray-400 hover:text-white text-lg">
                   Reservations
                 </Link>
               </li>
@@ -90,13 +90,13 @@ export default function Footer() {
               © 2024 FoodCourt Hub. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors text-lg">
+              <Link href="#" className="text-gray-400 hover:text-white text-lg">
                 Privacy Policy
               </Link>
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors text-lg">
+              <Link href="#" className="text-gray-400 hover:text-white text-lg">
                 Terms of Service
               </Link>
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors text-lg">
+              <Link href="#" className="text-gray-400 hover:text-white text-lg">
                 Support
               </Link>
             </div>

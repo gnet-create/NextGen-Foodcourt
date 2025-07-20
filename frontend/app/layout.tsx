@@ -1,7 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import Navigation from '@/components/Navigation';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -18,8 +18,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-gradient-to-br from-orange-50 via-white to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-orange-900 min-h-screen transition-colors duration-300`}>
-        <Navigation />
+      <body className={`${inter.className} bg-gray-50 min-h-screen`}>
+        <Header />
         <main className="max-w-7xl mx-auto px-6 py-12">
           {children}
         </main>

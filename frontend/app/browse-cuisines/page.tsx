@@ -4,24 +4,16 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { restaurants, cuisines } from '@/lib/data';
 
-interface CartItem {
-  dishId: string;
-  name: string;
-  price: number;
-  quantity: number;
-  restaurantName: string;
-}
-
 export default function BrowseCuisines() {
   const searchParams = useSearchParams();
-  const cuisineParam = searchParams.get('cuisine');
+  const cuisineParam = searchParams.get('cuisine'); // Get cuisine from URL
   
+  // State variables
   const [selectedCuisine, setSelectedCuisine] = useState(cuisineParam || '');
   const [selectedRestaurant, setSelectedRestaurant] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [showCart, setShowCart] = useState(false);
 
+  // Filter restaurants based on selected cuisine and search term
   const filteredRestaurants = restaurants.filter((restaurant) => {
     const matchesCuisine = selectedCuisine === '' || restaurant.cuisine === selectedCuisine;
     const matchesSearch = searchTerm === '' || 
@@ -31,83 +23,28 @@ export default function BrowseCuisines() {
     return matchesCuisine && matchesSearch;
   });
 
+  // Get restaurants that offer the selected cuisine
   const restaurantsForCuisine = selectedCuisine 
     ? restaurants.filter(r => r.cuisine === selectedCuisine)
     : [];
 
+  // Get the selected restaurant data
   const selectedRestaurantData = restaurants.find(r => r.id === selectedRestaurant);
-
-  const addToCart = (dishId: string, name: string, price: number, restaurantName: string) => {
-    const existingItem = cart.find(item => item.dishId === dishId);
-    
-    let newCart;
-    if (existingItem) {
-      newCart = cart.map(item =>
-        item.dishId === dishId 
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      );
-    } else {
-      newCart = [...cart, {
-        dishId,
-        name,
-        price,
-        quantity: 1,
-        restaurantName
-      }];
-    }
-    
-    setCart(newCart);
-    // Save to localStorage
-    localStorage.setItem('foodCourtCart', JSON.stringify(newCart));
-  };
-
-  const updateCartQuantity = (dishId: string, quantity: number) => {
-    let newCart;
-    if (quantity === 0) {
-      newCart = cart.filter(item => item.dishId !== dishId);
-    } else {
-      newCart = cart.map(item =>
-        item.dishId === dishId 
-          ? { ...item, quantity }
-          : item
-      );
-    }
-    
-    setCart(newCart);
-    localStorage.setItem('foodCourtCart', JSON.stringify(newCart));
-  };
-
-  const getTotalPrice = () => {
-    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-  };
-
-  const handleCheckout = () => {
-    if (cart.length === 0) {
-      alert('Please add items to your cart first!');
-      return;
-    }
-    // Redirect to checkout page
-    window.location.href = '/checkout';
-  };
-
-  // Load cart from localStorage on component mount
-  useEffect(() => {
-    const savedCart = localStorage.getItem('foodCourtCart');
-    if (savedCart) {
-      setCart(JSON.parse(savedCart));
-    }
-  }, []);
 
   return (
     <div className="relative">
+      {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-6">Browse by Cuisine</h1>
+        <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-6">
+          Browse by Cuisine
+        </h1>
         <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
           Find restaurants by cuisine type or search by name
         </p>
 
+        {/* Search and Filter Controls */}
         <div className="flex flex-col md:flex-row gap-6 mb-8">
+          {/* Search Input */}
           <input
             type="text"
             placeholder="Search restaurants..."
@@ -116,11 +53,12 @@ export default function BrowseCuisines() {
             className="flex-1 px-6 py-4 text-lg border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
           />
           
+          {/* Cuisine Filter */}
           <select
             value={selectedCuisine}
             onChange={(e) => {
               setSelectedCuisine(e.target.value);
-              setSelectedRestaurant('');
+              setSelectedRestaurant(''); // Reset restaurant selection
             }}
             className="px-6 py-4 text-lg border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
           >
@@ -131,18 +69,6 @@ export default function BrowseCuisines() {
               </option>
             ))}
           </select>
-
-          {cart.length > 0 && (
-            <button
-              onClick={() => setShowCart(!showCart)}
-              className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-4 text-lg font-semibold rounded-xl hover:from-orange-600 hover:to-red-600 transition-all duration-300 transform hover:scale-105 relative shadow-lg"
-            >
-              Cart ({cart.length})
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-sm rounded-full w-6 h-6 flex items-center justify-center font-bold">
-                {cart.reduce((sum, item) => sum + item.quantity, 0)}
-              </span>
-            </button>
-          )}
         </div>
       </div>
 
@@ -165,14 +91,16 @@ export default function BrowseCuisines() {
               >
                 <h3 className="text-xl font-bold text-gray-800 dark:text-white">{restaurant.name}</h3>
                 <p className="text-lg text-gray-600 dark:text-gray-300 mt-2">{restaurant.description}</p>
-                <p className="text-lg text-orange-600 dark:text-orange-400 mt-3 font-semibold">{restaurant.dishes.length} dishes available</p>
+                <p className="text-lg text-orange-600 dark:text-orange-400 mt-3 font-semibold">
+                  {restaurant.dishes.length} dishes available
+                </p>
               </button>
             ))}
           </div>
         </div>
       )}
 
-      {/* Menu Display */}
+      {/* Menu Display for Selected Restaurant */}
       {selectedCuisine && (selectedRestaurant || restaurantsForCuisine.length === 1) && (
         <div className="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
@@ -194,17 +122,12 @@ export default function BrowseCuisines() {
                   <span className="text-2xl font-bold text-green-600 dark:text-green-400">
                     KSh {dish.price.toLocaleString()}
                   </span>
-                  <button
-                    onClick={() => addToCart(
-                      dish.id, 
-                      dish.name, 
-                      dish.price, 
-                      selectedRestaurantData?.name || restaurantsForCuisine[0]?.name || ''
-                    )}
+                  <a
+                    href={`/order?outlet=${selectedRestaurantData?.id || restaurantsForCuisine[0]?.id}`}
                     className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-xl text-lg font-semibold hover:from-orange-600 hover:to-red-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
                   >
-                    Add to Cart
-                  </button>
+                    Order Now
+                  </a>
                 </div>
               </div>
             ))}
@@ -212,7 +135,7 @@ export default function BrowseCuisines() {
         </div>
       )}
 
-      {/* All Restaurants Grid */}
+      {/* All Restaurants Grid (when no specific cuisine is selected) */}
       {!selectedCuisine && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {filteredRestaurants.map((restaurant) => (
@@ -242,74 +165,12 @@ export default function BrowseCuisines() {
         </div>
       )}
 
-      {/* Cart Sidebar */}
-      {showCart && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-end">
-          <div className="bg-white dark:bg-gray-800 w-full max-w-lg h-full overflow-y-auto shadow-2xl">
-            <div className="p-8">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Your Cart</h2>
-                <button
-                  onClick={() => setShowCart(false)}
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {cart.length === 0 ? (
-                <p className="text-xl text-gray-500 dark:text-gray-400">Your cart is empty</p>
-              ) : (
-                <div className="space-y-6">
-                  {cart.map((item) => (
-                    <div key={item.dishId} className="border-b border-gray-200 dark:border-gray-600 pb-6">
-                      <h4 className="text-xl font-bold text-gray-800 dark:text-white">{item.name}</h4>
-                      <p className="text-lg text-gray-600 dark:text-gray-300">{item.restaurantName}</p>
-                      <div className="flex justify-between items-center mt-4">
-                        <div className="flex items-center gap-3">
-                          <button
-                            onClick={() => updateCartQuantity(item.dishId, item.quantity - 1)}
-                            className="w-10 h-10 bg-gray-200 dark:bg-gray-600 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500 text-lg font-bold"
-                          >
-                            -
-                          </button>
-                          <span className="mx-3 text-xl font-bold">{item.quantity}</span>
-                          <button
-                            onClick={() => updateCartQuantity(item.dishId, item.quantity + 1)}
-                            className="w-10 h-10 bg-gray-200 dark:bg-gray-600 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500 text-lg font-bold"
-                          >
-                            +
-                          </button>
-                        </div>
-                        <span className="text-xl font-bold text-green-600 dark:text-green-400">
-                          KSh {(item.price * item.quantity).toLocaleString()}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-
-                  <div className="pt-6">
-                    <div className="flex justify-between items-center text-2xl font-bold mb-6">
-                      <span>Total:</span>
-                      <span className="text-green-600 dark:text-green-400">KSh {getTotalPrice().toLocaleString()}</span>
-                    </div>
-                    <button
-                      onClick={handleCheckout}
-                      className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 rounded-xl text-xl font-bold hover:from-orange-600 hover:to-red-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
-                    >
-                      Proceed to Checkout
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
+      {/* No Results Message */}
       {filteredRestaurants.length === 0 && !selectedCuisine && (
         <div className="text-center py-12">
-          <p className="text-gray-500 dark:text-gray-400 text-2xl">No restaurants found matching your criteria.</p>
+          <p className="text-gray-500 dark:text-gray-400 text-2xl">
+            No restaurants found matching your criteria.
+          </p>
         </div>
       )}
     </div>

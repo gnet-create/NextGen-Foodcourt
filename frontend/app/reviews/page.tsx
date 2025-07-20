@@ -4,7 +4,10 @@ import { useState } from 'react';
 import { reviews, restaurants } from '@/lib/data';
 
 export default function Reviews() {
+  // State to manage all reviews (starting with initial reviews)
   const [allReviews, setAllReviews] = useState(reviews);
+  
+  // State for new review form
   const [newReview, setNewReview] = useState({
     customerName: '',
     outlet: '',
@@ -15,30 +18,36 @@ export default function Reviews() {
   // Check if user is logged in
   const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('userType');
 
+  // Handle review form submission
   const handleSubmitReview = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Check if user is logged in
     if (!isLoggedIn) {
       alert('Please log in to submit a review!');
       return;
     }
     
+    // Check if all required fields are filled
     if (!newReview.customerName || !newReview.outlet || !newReview.comment) {
       alert('Please fill in all fields!');
       return;
     }
 
+    // Create new review object
     const reviewToAdd = {
-      id: (allReviews.length + 1).toString(),
+      id: (allReviews.length + 1).toString(), // Simple ID generation
       customerName: newReview.customerName,
       outlet: newReview.outlet,
       rating: newReview.rating,
       comment: newReview.comment,
-      date: new Date().toISOString().split('T')[0]
+      date: new Date().toISOString().split('T')[0] // Today's date
     };
     
+    // Add new review to the beginning of the list (most recent first)
     setAllReviews([reviewToAdd, ...allReviews]);
     
+    // Show success message
     alert(`Review submitted successfully!\n\nThank you for your feedback!`);
     
     // Reset form
@@ -50,6 +59,7 @@ export default function Reviews() {
     });
   };
 
+  // Function to render star ratings
   const renderStars = (rating: number, interactive = false, onRate?: (rating: number) => void) => {
     return (
       <div className="flex">
@@ -72,17 +82,22 @@ export default function Reviews() {
 
   return (
     <div>
+      {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-6">Customer Reviews</h1>
+        <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-6">
+          Customer Reviews
+        </h1>
         <p className="text-gray-600">
           Share your experience and read what others are saying about our restaurants
         </p>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-8">
+        {/* Write a Review Form */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-6">Write a Review</h2>
           
+          {/* Login message for non-logged-in users */}
           {!isLoggedIn && (
             <div className="mb-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
               <p className="text-orange-800">
@@ -92,6 +107,7 @@ export default function Reviews() {
           )}
           
           <form onSubmit={handleSubmitReview} className="space-y-4">
+            {/* Customer Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Your Name *
@@ -107,6 +123,7 @@ export default function Reviews() {
               />
             </div>
 
+            {/* Restaurant Selection */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Restaurant *
@@ -127,15 +144,17 @@ export default function Reviews() {
               </select>
             </div>
 
+            {/* Rating */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Rating *
               </label>
-              {renderStars(newReview.rating, true, (rating) => 
+              {renderStars(newReview.rating, isLoggedIn, (rating) => 
                 setNewReview({ ...newReview, rating })
               )}
             </div>
 
+            {/* Review Comment */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Your Review *
@@ -151,6 +170,7 @@ export default function Reviews() {
               />
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               className={`w-full py-3 rounded-xl text-lg font-bold transition-all duration-300 transform hover:scale-105 shadow-lg ${
@@ -165,6 +185,7 @@ export default function Reviews() {
           </form>
         </div>
 
+        {/* Recent Reviews Display */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-6">Recent Reviews</h2>
           
@@ -190,6 +211,7 @@ export default function Reviews() {
         </div>
       </div>
 
+      {/* Social Media Sharing Section */}
       <div className="mt-12 bg-white rounded-lg shadow-md p-8 text-center">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">
           Love our food court?
