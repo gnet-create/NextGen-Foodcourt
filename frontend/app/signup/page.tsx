@@ -42,7 +42,7 @@ export default function Signup() {
      
       localStorage.setItem('userType', 'customer');
       localStorage.setItem('userName', `${formData.firstName} ${formData.lastName}`);
-      alert(`User account created for: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}\n\nNote: This is a demo - no actual account is created.`);
+      alert(`User account created for: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}`);
     }
   };
 
