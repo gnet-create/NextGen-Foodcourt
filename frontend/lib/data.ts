@@ -1,7 +1,3 @@
-// Data file for our food court app
-// This contains all the restaurant and menu information
-
-// Interface definitions
 export interface Dish {
   id: string;
   name: string;
@@ -40,7 +36,6 @@ export interface Review {
   date: string;
 }
 
-// All our restaurants with their menus
 export const restaurants: Restaurant[] = [
   {
     id: '1',
@@ -116,7 +111,6 @@ export const restaurants: Restaurant[] = [
   },
 ];
 
-// Different types of cuisines available
 export const cuisines: Cuisine[] = [
   { name: 'Coastal', image: 'https://images.pexels.com/photos/1633578/pexels-photo-1633578.jpeg?auto=compress&cs=tinysrgb&w=400' },
   { name: 'Indian', image: 'https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg?auto=compress&cs=tinysrgb&w=400' },
@@ -127,7 +121,6 @@ export const cuisines: Cuisine[] = [
   { name: 'Japanese', image: 'https://images.pexels.com/photos/357756/pexels-photo-357756.jpeg?auto=compress&cs=tinysrgb&w=400' },
 ];
 
-// Tables available for reservation
 export const tables: Table[] = [
   { id: '1', number: 1, capacity: 4, status: 'available' },
   { id: '2', number: 2, capacity: 6, status: 'available' },
@@ -141,7 +134,6 @@ export const tables: Table[] = [
   { id: '10', number: 10, capacity: 6, status: 'available' },
 ];
 
-// Sample customer reviews
 export const reviews: Review[] = [
   {
     id: '1',

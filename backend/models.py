@@ -20,7 +20,6 @@ class User(db.Model, SerializerMixin):
     orders = db.relationship('Order', back_populates='user', cascade='all, delete-orphan')
     reservations = db.relationship('Reservation', back_populates='user', cascade='all, delete-orphan')
 
-    # Password protection
     @hybrid_property
     def password_hash(self):
         raise AttributeError("Password hashes may not be viewed.")

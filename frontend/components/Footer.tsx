@@ -8,7 +8,7 @@ export default function Footer() {
     <footer className="bg-gray-900 text-white mt-16">
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid md:grid-cols-4 gap-8">
-          {/* Brand Section */}
+          
           <div className="md:col-span-1">
             <h3 className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent mb-4">
               FoodCourt Hub
@@ -29,7 +29,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
             <h4 className="text-xl font-semibold mb-4 text-orange-400">Quick Links</h4>
             <ul className="space-y-3">
@@ -51,7 +50,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Restaurant Partners */}
           <div>
             <h4 className="text-xl font-semibold mb-4 text-orange-400">Our Partners</h4>
             <ul className="space-y-3">
@@ -64,7 +62,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact Info */}
           <div>
             <h4 className="text-xl font-semibold mb-4 text-orange-400">Contact Us</h4>
             <div className="space-y-3">

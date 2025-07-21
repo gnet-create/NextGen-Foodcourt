@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { tables } from '@/lib/data';
 
-// Interface for reservation data
 interface Reservation {
   id: string;
   tableId: string;
@@ -15,7 +14,7 @@ interface Reservation {
 }
 
 export default function Reservations() {
-  // State variables
+ 
   const [selectedTable, setSelectedTable] = useState('');
   const [reservationDate, setReservationDate] = useState('');
   const [reservationTime, setReservationTime] = useState('');
@@ -25,10 +24,8 @@ export default function Reservations() {
   const [showReservations, setShowReservations] = useState(false);
   const [reservedTables, setReservedTables] = useState<string[]>([]);
 
-  // Check if user is logged in
   const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('userType');
 
-  // Show login message if user is not logged in
   if (!isLoggedIn) {
     return (
       <div className="text-center py-12">
@@ -46,27 +43,22 @@ export default function Reservations() {
     );
   }
 
-  // Get available tables (not reserved by customers)
   const availableTables = tables.filter(table => 
     table.status === 'available' && !reservedTables.includes(table.id)
   );
 
-  // Handle reservation form submission
   const handleReservation = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Check if all required fields are filled
     if (!selectedTable || !reservationDate || !reservationTime || !customerName) {
       alert('Please fill in all required fields!');
       return;
     }
 
-    // Find the selected table info
     const selectedTableInfo = tables.find(t => t.id === selectedTable);
     
-    // Create new reservation
     const newReservation: Reservation = {
-      id: Date.now().toString(), // Simple ID generation
+      id: Date.now().toString(), 
       tableId: selectedTable,
       customerName,
       date: reservationDate,
@@ -75,14 +67,11 @@ export default function Reservations() {
       status: 'confirmed'
     };
     
-    // Add reservation to list and mark table as reserved
     setReservations([...reservations, newReservation]);
     setReservedTables([...reservedTables, selectedTable]);
     
-    // Show success message
     alert(`Table reserved successfully!\n\nTable: ${selectedTableInfo?.number}\nDate: ${reservationDate}\nTime: ${reservationTime}\nGuests: ${guestCount}`);
     
-    // Reset form
     setSelectedTable('');
     setReservationDate('');
     setReservationTime('');
@@ -90,22 +79,20 @@ export default function Reservations() {
     setGuestCount(1);
   };
 
-  // Cancel a reservation
   const cancelReservation = (reservationId: string) => {
     const reservation = reservations.find(res => res.id === reservationId);
     if (reservation) {
-      // Update reservation status to cancelled
+      
       setReservations(reservations.map(res => 
         res.id === reservationId 
           ? { ...res, status: 'cancelled' }
           : res
       ));
-      // Free up the table
+      
       setReservedTables(reservedTables.filter(tableId => tableId !== reservation.tableId));
     }
   };
 
-  // Get table number from table ID
   const getTableNumber = (tableId: string) => {
     const table = tables.find(t => t.id === tableId);
     return table?.number || 'Unknown';
@@ -113,7 +100,7 @@ export default function Reservations() {
 
   return (
     <div>
-      {/* Page Header */}
+      
       <div className="mb-8">
         <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-6">
           Table Reservations
@@ -122,7 +109,6 @@ export default function Reservations() {
           Reserve a shared table in our food court for your dining experience
         </p>
         
-        {/* Tab Navigation */}
         <div className="mt-6 flex gap-4">
           <button
             onClick={() => setShowReservations(false)}
@@ -147,10 +133,9 @@ export default function Reservations() {
         </div>
       </div>
 
-      {/* Make Reservation Tab */}
       {!showReservations ? (
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Available Tables Display */}
+        
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Available Tables</h2>
             
@@ -189,12 +174,11 @@ export default function Reservations() {
             </div>
           </div>
 
-          {/* Reservation Form */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Make a Reservation</h2>
             
             <form onSubmit={handleReservation} className="space-y-4">
-              {/* Customer Name */}
+             
               <div>
                 <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   Your Name *
@@ -208,8 +192,6 @@ export default function Reservations() {
                   required
                 />
               </div>
-
-              {/* Table Selection */}
               <div>
                 <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   Selected Table
@@ -229,7 +211,6 @@ export default function Reservations() {
                 </select>
               </div>
 
-              {/* Date and Time */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
@@ -279,7 +260,6 @@ export default function Reservations() {
                 </div>
               </div>
 
-              {/* Number of Guests */}
               <div>
                 <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   Number of Guests
@@ -294,7 +274,6 @@ export default function Reservations() {
                 />
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 rounded-xl text-xl font-bold hover:from-orange-600 hover:to-red-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
@@ -305,7 +284,7 @@ export default function Reservations() {
           </div>
         </div>
       ) : (
-        /* My Reservations Tab */
+        
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
           <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">My Reservations</h2>
           

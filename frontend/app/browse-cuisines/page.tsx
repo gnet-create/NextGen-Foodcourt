@@ -6,14 +6,11 @@ import { restaurants, cuisines } from '@/lib/data';
 
 export default function BrowseCuisines() {
   const searchParams = useSearchParams();
-  const cuisineParam = searchParams.get('cuisine'); // Get cuisine from URL
-  
-  // State variables
+  const cuisineParam = searchParams.get('cuisine'); 
+ 
   const [selectedCuisine, setSelectedCuisine] = useState(cuisineParam || '');
   const [selectedRestaurant, setSelectedRestaurant] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-
-  // Filter restaurants based on selected cuisine and search term
   const filteredRestaurants = restaurants.filter((restaurant) => {
     const matchesCuisine = selectedCuisine === '' || restaurant.cuisine === selectedCuisine;
     const matchesSearch = searchTerm === '' || 
@@ -23,17 +20,15 @@ export default function BrowseCuisines() {
     return matchesCuisine && matchesSearch;
   });
 
-  // Get restaurants that offer the selected cuisine
   const restaurantsForCuisine = selectedCuisine 
     ? restaurants.filter(r => r.cuisine === selectedCuisine)
     : [];
 
-  // Get the selected restaurant data
   const selectedRestaurantData = restaurants.find(r => r.id === selectedRestaurant);
 
   return (
     <div className="relative">
-      {/* Page Header */}
+  
       <div className="mb-8">
         <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-6">
           Browse by Cuisine
@@ -42,9 +37,8 @@ export default function BrowseCuisines() {
           Find restaurants by cuisine type or search by name
         </p>
 
-        {/* Search and Filter Controls */}
         <div className="flex flex-col md:flex-row gap-6 mb-8">
-          {/* Search Input */}
+
           <input
             type="text"
             placeholder="Search restaurants..."
@@ -53,12 +47,11 @@ export default function BrowseCuisines() {
             className="flex-1 px-6 py-4 text-lg border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
           />
           
-          {/* Cuisine Filter */}
           <select
             value={selectedCuisine}
             onChange={(e) => {
               setSelectedCuisine(e.target.value);
-              setSelectedRestaurant(''); // Reset restaurant selection
+              setSelectedRestaurant(''); 
             }}
             className="px-6 py-4 text-lg border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
           >
@@ -72,7 +65,6 @@ export default function BrowseCuisines() {
         </div>
       </div>
 
-      {/* Restaurant Selection for Selected Cuisine */}
       {selectedCuisine && restaurantsForCuisine.length > 1 && (
         <div className="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
@@ -100,7 +92,6 @@ export default function BrowseCuisines() {
         </div>
       )}
 
-      {/* Menu Display for Selected Restaurant */}
       {selectedCuisine && (selectedRestaurant || restaurantsForCuisine.length === 1) && (
         <div className="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
@@ -135,7 +126,6 @@ export default function BrowseCuisines() {
         </div>
       )}
 
-      {/* All Restaurants Grid (when no specific cuisine is selected) */}
       {!selectedCuisine && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {filteredRestaurants.map((restaurant) => (
@@ -165,7 +155,6 @@ export default function BrowseCuisines() {
         </div>
       )}
 
-      {/* No Results Message */}
       {filteredRestaurants.length === 0 && !selectedCuisine && (
         <div className="text-center py-12">
           <p className="text-gray-500 dark:text-gray-400 text-2xl">

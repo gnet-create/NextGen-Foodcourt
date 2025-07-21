@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { restaurants, tables, owners } from '@/lib/data';
 
 export default function OwnerDashboard() {
-  const [selectedOwnerId] = useState('1'); // Simulating logged in owner
+  const [selectedOwnerId] = useState('1'); 
   
   const owner = owners.find(o => o.id === selectedOwnerId);
   const restaurant = restaurants.find(r => r.id === owner?.restaurantId);
@@ -26,7 +26,6 @@ export default function OwnerDashboard() {
         </p>
       </div>
 
-      {/* Stats Overview */}
       <div className="grid md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow-md p-6">
           <h3 className="text-lg font-semibold text-gray-800 mb-2">Total Revenue</h3>
@@ -52,7 +51,7 @@ export default function OwnerDashboard() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-8">
-        {/* Tables Management */}
+
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Your Tables</h2>
           <div className="grid grid-cols-4 gap-3">
@@ -81,7 +80,6 @@ export default function OwnerDashboard() {
           </div>
         </div>
 
-        {/* Popular Dishes */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Popular Dishes</h2>
           <div className="space-y-4">
@@ -105,7 +103,6 @@ export default function OwnerDashboard() {
         </div>
       </div>
 
-      {/* Restaurant Menu */}
       <div className="mt-8 bg-white rounded-lg shadow-md p-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Your Menu</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -128,7 +125,6 @@ export default function OwnerDashboard() {
         </div>
       </div>
 
-      {/* Quick Actions */}
       <div className="mt-8 bg-white rounded-lg shadow-md p-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h2>
         <div className="grid md:grid-cols-4 gap-4">
