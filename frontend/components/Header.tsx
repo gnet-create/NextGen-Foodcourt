@@ -8,20 +8,17 @@ import { ShoppingCart, Utensils } from 'lucide-react';
 export default function Header() {
   const pathname = usePathname();
   
-  // State to track user login status and cart
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   const [cartCount, setCartCount] = useState(0);
 
-  // Check login status when component loads
   useEffect(() => {
-    // Only run this code in the browser (not on server)
+  
     if (typeof window !== 'undefined') {
       const userType = localStorage.getItem('userType');
       setIsLoggedIn(!!userType);
       setIsOwner(userType === 'owner');
       
-      // Load cart count from localStorage
       const savedCart = localStorage.getItem('foodCourtCart');
       if (savedCart) {
         const cart = JSON.parse(savedCart);
@@ -31,7 +28,6 @@ export default function Header() {
     }
   }, []);
 
-  // Navigation menu items
   const navItems = [
     { href: '/', label: 'Home' },
     { href: '/order', label: 'Orders' },
@@ -43,7 +39,7 @@ export default function Header() {
     <nav className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-18">
-          {/* Logo */}
+         
           <Link href="/" className="flex items-center space-x-3">
             <div className="bg-gradient-to-r from-orange-500 to-red-500 p-2 rounded-full">
               <Utensils className="w-8 h-8 text-white" />
@@ -53,7 +49,6 @@ export default function Header() {
             </span>
           </Link>
           
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
               <Link
@@ -69,7 +64,6 @@ export default function Header() {
               </Link>
             ))}
             
-            {/* Cart Icon */}
             <Link
               href="/checkout"
               className="relative p-2 text-gray-700 hover:text-orange-600 transition-colors"
@@ -82,7 +76,6 @@ export default function Header() {
               )}
             </Link>
             
-            {/* Owner Dashboard Link (only show if logged in as owner) */}
             {isOwner && (
               <Link
                 href="/owner-dashboard"
@@ -97,9 +90,8 @@ export default function Header() {
             )}
           </div>
 
-          {/* Mobile Navigation */}
           <div className="md:hidden flex items-center space-x-4">
-            {/* Mobile Cart */}
+            
             <Link
               href="/checkout"
               className="relative p-2 text-gray-700"
@@ -112,7 +104,6 @@ export default function Header() {
               )}
             </Link>
             
-            {/* Mobile Menu Dropdown */}
             <select
               onChange={(e) => window.location.href = e.target.value}
               value={pathname}

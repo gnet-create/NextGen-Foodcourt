@@ -25,7 +25,7 @@ export default function Checkout() {
   const router = useRouter();
 
   useEffect(() => {
-    // Load cart from localStorage
+    
     const savedCart = localStorage.getItem('foodCourtCart');
     if (savedCart) {
       setCart(JSON.parse(savedCart));
@@ -69,7 +69,7 @@ export default function Checkout() {
   };
 
   const getDeliveryFee = () => {
-    return getTotalPrice() > 1000 ? 0 : 100; // Free delivery over KSh 1000
+    return getTotalPrice() > 1000 ? 0 : 100; 
   };
 
   const getFinalTotal = () => {
@@ -89,14 +89,11 @@ export default function Checkout() {
       return;
     }
 
-    // Simulate order submission
     alert(`Order submitted successfully!\n\nOrder Summary:\n${cart.map(item => `${item.quantity}x ${item.name} from ${item.restaurantName}`).join('\n')}\n\nTotal: KSh ${getFinalTotal().toLocaleString()}\nPayment: ${paymentMethod.toUpperCase()}\n\nYour order will be ready in 15-20 minutes!`);
     
-    // Clear cart
     setCart([]);
     localStorage.removeItem('foodCourtCart');
     
-    // Redirect to home
     router.push('/');
   };
 
@@ -123,7 +120,7 @@ export default function Checkout() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-8">
-        {/* Order Summary */}
+       
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-6">Order Summary</h2>
           
@@ -176,7 +173,6 @@ export default function Checkout() {
             ))}
           </div>
 
-          {/* Price Breakdown */}
           <div className="border-t border-gray-200 pt-4 space-y-2">
             <div className="flex justify-between">
               <span>Subtotal:</span>
@@ -198,7 +194,6 @@ export default function Checkout() {
           </div>
         </div>
 
-        {/* Customer Information & Payment */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-6">Customer Information</h2>
           

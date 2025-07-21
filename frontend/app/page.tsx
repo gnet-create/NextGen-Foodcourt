@@ -4,12 +4,12 @@ import Link from 'next/link';
 import { restaurants, cuisines } from '@/lib/data';
 
 export default function Home() {
-  // Get first 4 cuisines for homepage display
+ 
   const displayCuisines = cuisines.slice(0, 4);
 
   return (
     <div>
-      {/* Hero Section with Background Image */}
+  
       <div className="relative h-96 mb-16 rounded-lg overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center"
@@ -30,8 +30,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      {/* Browse by Restaurant Section */}
       <div className="mb-16">
         <div className="text-center mb-8">
           <h2 className="text-4xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-6">
@@ -42,7 +40,6 @@ export default function Home() {
           </p>
         </div>
         
-        {/* Restaurant Cards - First 4 restaurants */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
           {restaurants.slice(0, 4).map((restaurant) => (
             <Link 
@@ -69,7 +66,6 @@ export default function Home() {
           ))}
         </div>
 
-        {/* View All Restaurants Button */}
         <div className="text-center">
           <Link 
             href="/browse-outlets"
@@ -80,7 +76,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Browse by Cuisines Section */}
       <div className="mb-16">
         <div className="text-center mb-8">
           <h2 className="text-4xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-6">
@@ -91,7 +86,6 @@ export default function Home() {
           </p>
         </div>
         
-        {/* Cuisine Cards - Only show 4 cuisines */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
           {displayCuisines.map((cuisine) => (
             <Link 
@@ -115,7 +109,6 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Explore All Cuisines Button */}
         <div className="text-center">
           <Link 
             href="/browse-cuisines"
@@ -126,7 +119,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Quick Links Section */}
       <div className="grid md:grid-cols-3 gap-8">
         <Link 
           href="/popular-dishes" 

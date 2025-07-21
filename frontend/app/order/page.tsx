@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { restaurants } from '@/lib/data';
 
-// Interface for items in the cart
 interface OrderItem {
   dishId: string;
   name: string;
@@ -15,20 +14,16 @@ interface OrderItem {
 
 export default function Order() {
   const searchParams = useSearchParams();
-  const outletId = searchParams.get('outlet'); // Get restaurant ID from URL
+  const outletId = searchParams.get('outlet'); 
   
-  // State variables
   const [selectedOutlet, setSelectedOutlet] = useState(outletId || '');
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   
-  // Find the selected restaurant
   const selectedRestaurant = restaurants.find(r => r.id === selectedOutlet);
 
-  // Check if user is logged in
   const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('userType');
 
-  // Show login message if user is not logged in
   if (!isLoggedIn) {
     return (
       <div className="text-center py-12">
@@ -46,25 +41,23 @@ export default function Order() {
     );
   }
 
-  // Filter dishes based on search term
   const filteredDishes = selectedRestaurant?.dishes.filter(dish =>
     dish.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     dish.description.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
 
-  // Function to add item to cart
   const addToOrder = (dishId: string, name: string, price: number) => {
     const existingItem = orderItems.find(item => item.dishId === dishId);
     
     if (existingItem) {
-      // If item already exists, increase quantity
+ 
       setOrderItems(orderItems.map(item =>
         item.dishId === dishId 
           ? { ...item, quantity: item.quantity + 1 }
           : item
       ));
     } else {
-      // Add new item to cart
+     
       setOrderItems([...orderItems, {
         dishId,
         name,
@@ -75,13 +68,12 @@ export default function Order() {
     }
   };
 
-  // Function to update item quantity
   const updateQuantity = (dishId: string, quantity: number) => {
     if (quantity === 0) {
-      // Remove item if quantity is 0
+      
       setOrderItems(orderItems.filter(item => item.dishId !== dishId));
     } else {
-      // Update quantity
+      
       setOrderItems(orderItems.map(item =>
         item.dishId === dishId 
           ? { ...item, quantity }
@@ -90,7 +82,6 @@ export default function Order() {
     }
   };
 
-  // Function to update item notes
   const updateNotes = (dishId: string, notes: string) => {
     setOrderItems(orderItems.map(item =>
       item.dishId === dishId 
@@ -99,23 +90,21 @@ export default function Order() {
     ));
   };
 
-  // Calculate total price
   const getTotalPrice = () => {
     return orderItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
 
-  // Handle checkout
   const handleCheckout = () => {
     if (orderItems.length === 0) {
       alert('Please add items to your order first!');
       return;
     }
-    alert(`Order submitted! Total: KSh ${getTotalPrice().toLocaleString()}\n\nNote: Payment functionality not implemented yet.`);
+    alert(`Order submitted! Total: KSh ${getTotalPrice().toLocaleString()}.`);
   };
 
   return (
     <div>
-      {/* Page Header */}
+      
       <div className="mb-8">
         <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-6">
           Place Your Order
@@ -126,9 +115,9 @@ export default function Order() {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
-        {/* Left Side - Restaurant Selection and Menu */}
+       
         <div className="lg:col-span-2">
-          {/* Restaurant Selection Dropdown */}
+          
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Select Restaurant
@@ -147,7 +136,6 @@ export default function Order() {
             </select>
           </div>
 
-          {/* Search Bar (only show if restaurant is selected) */}
           {selectedRestaurant && (
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -163,7 +151,6 @@ export default function Order() {
             </div>
           )}
 
-          {/* Restaurant Menu */}
           {selectedRestaurant && (
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">
@@ -175,7 +162,6 @@ export default function Order() {
 
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Menu</h3>
               
-              {/* Menu Items */}
               <div className="space-y-4">
                 {filteredDishes.map((dish) => (
                   <div key={dish.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
@@ -195,7 +181,6 @@ export default function Order() {
                   </div>
                 ))}
                 
-                {/* No results message */}
                 {filteredDishes.length === 0 && searchTerm && (
                   <div className="text-center py-8">
                     <p className="text-gray-500 text-lg">No dishes found matching "{searchTerm}"</p>
@@ -206,7 +191,6 @@ export default function Order() {
           )}
         </div>
 
-        {/* Right Side - Order Summary */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-lg shadow-md p-6 sticky top-4">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Your Order</h3>
@@ -224,7 +208,6 @@ export default function Order() {
                       </span>
                     </div>
                     
-                    {/* Quantity Controls */}
                     <div className="flex items-center gap-2 mb-2">
                       <button
                         onClick={() => updateQuantity(item.dishId, item.quantity - 1)}
@@ -241,7 +224,6 @@ export default function Order() {
                       </button>
                     </div>
                     
-                    {/* Special Instructions */}
                     <input
                       type="text"
                       placeholder="Special instructions..."
@@ -252,7 +234,6 @@ export default function Order() {
                   </div>
                 ))}
                 
-                {/* Order Total and Checkout */}
                 <div className="pt-4">
                   <div className="flex items-center justify-between text-lg font-semibold">
                     <span>Total:</span>

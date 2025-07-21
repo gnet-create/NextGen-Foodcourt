@@ -17,7 +17,7 @@ app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access']
 
 app.json.compact = False
 
-CORS(app, resources={r"/*": {"origins": "http://localhost:4000"}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
 
 metadata = MetaData(naming_convention={
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
