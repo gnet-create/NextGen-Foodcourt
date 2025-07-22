@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function Signup() {
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -43,6 +45,7 @@ export default function Signup() {
       localStorage.setItem('userType', 'customer');
       localStorage.setItem('userName', `${formData.firstName} ${formData.lastName}`);
       alert(`User account created for: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}`);
+      router.push('/order');
     }
   };
 
