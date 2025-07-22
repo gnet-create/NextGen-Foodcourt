@@ -28,17 +28,17 @@ with app.app_context():
     owner4.password_hash = "ownerpass4"
 
     db.session.add_all([customer1, customer2, owner1, owner2, owner3, owner4])
-
-    italian = Cuisine(name="Italian")
-    chinese = Cuisine(name="Chinese")
-    indian = Cuisine(name="Indian")
-    mexican = Cuisine(name="Mexican")
+    
+    italian = Cuisine(name="Italian", img_url="https://example.com/italian.jpg")
+    chinese = Cuisine(name="Chinese", img_url="https://example.com/chinese.jpg")
+    indian = Cuisine(name="Indian", img_url="https://example.com/indian.jpg")
+    mexican = Cuisine(name="Mexican", img_url="https://example.com/mexican.jpg")
     db.session.add_all([italian, chinese, indian, mexican])
 
-    outlet1 = Outlet(name="Pasta Palace", contact="0700111222", cuisine=italian, owner=owner1)
-    outlet2 = Outlet(name="Dragon Express", contact="0700333444", cuisine=chinese, owner=owner2)
-    outlet3 = Outlet(name="Curry Hut", contact="0700555666", cuisine=indian, owner=owner3)
-    outlet4 = Outlet(name="Taco Town", contact="0700777888", cuisine=mexican, owner=owner4)
+    outlet1 = Outlet(name="Pasta Palace", contact="0700111222", cuisine=italian, owner=owner1, img_url="https://example.com/pasta-palace.jpg")
+    outlet2 = Outlet(name="Dragon Express", contact="0700333444", cuisine=chinese, owner=owner2, img_url="https://example.com/dragon-express.jpg")
+    outlet3 = Outlet(name="Curry Hut", contact="0700555666", cuisine=indian, owner=owner3, img_url="https://example.com/curry-hut.jpg")
+    outlet4 = Outlet(name="Taco Town", contact="0700777888", cuisine=mexican, owner=owner4, img_url="https://example.com/taco-town.jpg")
     db.session.add_all([outlet1, outlet2, outlet3, outlet4])
 
     items = [
