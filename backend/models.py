@@ -55,6 +55,7 @@ class Cuisine(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
+    img_url = db.Column(db.String)
 
     outlets = db.relationship('Outlet', back_populates='cuisine', cascade='all, delete-orphan')
     
@@ -69,6 +70,7 @@ class Outlet(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     contact = db.Column(db.String)
+    img_url = db.Column(db.String)
     cuisine_id = db.Column(db.Integer, db.ForeignKey('cuisines.id'))
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
