@@ -8,7 +8,7 @@ export default function OwnerDashboard() {
   
   const owner = owners.find(o => o.id === selectedOwnerId);
   const restaurant = restaurants.find(r => r.id === owner?.restaurantId);
-  const ownerTables = tables.filter(t => t.ownerId === selectedOwnerId);
+  // const ownerTables = tables.filter(t => t.ownerId === selectedOwnerId);
   const popularDishes = restaurant?.dishes.filter(d => d.isPopular) || [];
 
   if (!owner || !restaurant) {
@@ -30,16 +30,16 @@ export default function OwnerDashboard() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <h3 className="text-lg font-semibold text-gray-800 mb-2">Total Revenue</h3>
           <p className="text-3xl font-bold text-green-600">
-            KSh {owner.totalRevenue.toLocaleString()}
+            {/* KSh {owner.totalRevenue.toLocaleString()} */}
           </p>
           <p className="text-sm text-gray-500 mt-1">This month</p>
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-6">
           <h3 className="text-lg font-semibold text-gray-800 mb-2">Tables Owned</h3>
-          <p className="text-3xl font-bold text-blue-600">{ownerTables.length}</p>
+          {/* <p className="text-3xl font-bold text-blue-600">{ownerTables.length}</p> */}
           <p className="text-sm text-gray-500 mt-1">
-            {ownerTables.filter(t => t.status === 'available').length} available
+            {/* {ownerTables.filter(t => t.status === 'available').length} available */}
           </p>
         </div>
 
@@ -54,7 +54,7 @@ export default function OwnerDashboard() {
 
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Your Tables</h2>
-          <div className="grid grid-cols-4 gap-3">
+          {/* <div className="grid grid-cols-4 gap-3">
             {ownerTables.map((table) => (
               <div
                 key={table.id}
@@ -67,7 +67,7 @@ export default function OwnerDashboard() {
                 T{table.number}
               </div>
             ))}
-          </div>
+          </div> */}
           <div className="mt-4 flex items-center gap-4 text-sm">
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 bg-black rounded"></div>
