@@ -33,14 +33,27 @@ with app.app_context():
     chinese = Cuisine(name="Chinese", img_url="https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg?auto=compress&cs=tinysrgb&w=400")
     indian = Cuisine(name="Indian", img_url="https://images.pexels.com/photos/1410235/pexels-photo-1410235.jpeg?auto=compress&cs=tinysrgb&w=400")
     mexican = Cuisine(name="Mexican", img_url="https://images.pexels.com/photos/357756/pexels-photo-357756.jpeg?auto=compress&cs=tinysrgb&w=400")
-    
-    db.session.add_all([italian, chinese, indian, mexican])
+    coastal = Cuisine(name="Coastal", img_url="https://images.pexels.com/photos/1633578/pexels-photo-1633578.jpeg?auto=compress&cs=tinysrgb&w=400")
+    fast_food = Cuisine(name="Fast Food", img_url="https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?auto=compress&cs=tinysrgb&w=400")
+    vegan = Cuisine(name="Vegan", img_url="https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg?auto=compress&cs=tinysrgb&w=400")
+    bbq = Cuisine(name="BBQ", img_url="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400")
+    japanese = Cuisine(name="Japanese", img_url="https://images.pexels.com/photos/357756/pexels-photo-357756.jpeg?auto=compress&cs=tinysrgb&w=400")
 
-    outlet1 = Outlet(name="Pasta Palace", contact="0700111222", cuisine=italian, owner=owner1, img_url="https://example.com/pasta-palace.jpg")
-    outlet2 = Outlet(name="Dragon Express", contact="0700333444", cuisine=chinese, owner=owner2, img_url="https://example.com/dragon-express.jpg")
-    outlet3 = Outlet(name="Curry Hut", contact="0700555666", cuisine=indian, owner=owner3, img_url="https://example.com/curry-hut.jpg")
-    outlet4 = Outlet(name="Taco Town", contact="0700777888", cuisine=mexican, owner=owner4, img_url="https://example.com/taco-town.jpg")
-    db.session.add_all([outlet1, outlet2, outlet3, outlet4])
+    
+    db.session.add_all([italian, chinese, indian, mexican, coastal, fast_food, vegan, bbq, japanese])
+
+    outlet1 = Outlet(name="Pasta Palace", contact="0700111222", cuisine=italian, owner=owner1, img_url="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400", description="Authentic Italian pasta dishes served fresh daily with handmade sauces and ingredients.")
+    outlet2 = Outlet(name="Dragon Express", contact="0700333444", cuisine=chinese, owner=owner2, img_url="https://images.pexels.com/photos/357756/pexels-photo-357756.jpeg?auto=compress&cs=tinysrgb&w=400", description="Fast and flavorful Chinese takeout featuring noodles, dumplings, and stir-fries." )
+    outlet3 = Outlet(name="Curry Hut", contact="0700555666", cuisine=indian, owner=owner3, img_url="https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg?auto=compress&cs=tinysrgb&w=400", description="A warm hut of aromatic Indian curries, tandoori specialties, and buttery naan.")
+    outlet4 = Outlet(name="Taco Town", contact="0700777888", cuisine=mexican, owner=owner4, img_url='https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?auto=compress&cs=tinysrgb&w=400',  description="A vibrant stop for street-style tacos, burritos, and sizzling fajitas." )
+    outlet5 = Outlet(name="Tamu Tamu Grills", contact="0700999000", cuisine=bbq, owner=owner1, img_url="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400", description="Juicy grilled meats and flavorful BBQ delights with a Kenyan twist.")
+    outlet6 = Outlet(name="Swahili Plates", contact="0700888111", cuisine=coastal, owner=owner2, img_url="https://images.pexels.com/photos/1633578/pexels-photo-1633578.jpeg?auto=compress&cs=tinysrgb&w=400", description="Tasty coastal dishes rich with spices, coconut, and Swahili tradition.")
+    outlet7 = Outlet(name="Burger Bros", contact="0700777222", cuisine=fast_food, owner=owner3, img_url="https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?auto=compress&cs=tinysrgb&w=400", description="Smash burgers, loaded fries, and thick milkshakes served fast and fresh.")
+    outlet8 = Outlet(name="Sushi Spot", contact="0700666333", cuisine=japanese, owner=owner4, img_url="https://images.pexels.com/photos/357756/pexels-photo-357756.jpeg?auto=compress&cs=tinysrgb&w=400",  description="Fresh sushi rolls, sashimi, and Japanese delicacies crafted with precision.")
+    outlet9 = Outlet(name="Spice Garden", contact="0700555444", cuisine=indian, owner=owner1, img_url="https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg?auto=compress&cs=tinysrgb&w=400", description="A garden of bold Indian spices offering rich curries and vegetarian favorites.")
+    outlet10 = Outlet(name="Green Bowl", contact="0700444333", cuisine=vegan, owner=owner2, img_url="https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg?auto=compress&cs=tinysrgb&w=400",  description="Nutritious vegan bowls packed with greens, grains, and guilt-free goodness.")
+
+    db.session.add_all([outlet1, outlet2, outlet3, outlet4, outlet5, outlet6, outlet7, outlet8, outlet9, outlet10])
 
     items = [
         MenuItem(name="Spaghetti", description="Classic spaghetti with tomato sauce", price=800, category="Main", outlet=outlet1),
@@ -55,7 +68,24 @@ with app.app_context():
         MenuItem(name="Beef Taco", description="Soft taco with seasoned beef", price=300, category="Main", outlet=outlet4),
         MenuItem(name="Quesadilla", description="Grilled cheese tortilla", price=500, category="Main", outlet=outlet4),
         MenuItem(name="Nachos", description="Corn chips with melted cheese", price=450, category="Snack", outlet=outlet4),
-    ]
+        MenuItem(name="Grilled Chicken", description="Marinated chicken with traditional spices", price=1200, category="Main", outlet=outlet5),
+        MenuItem(name="Beef Kebabs", description="Tender beef skewers", price=1500, category="Main", outlet=outlet5),
+        MenuItem(name="Grilled Fish", description="Fresh fish with herbs", price=1800, category="Main", outlet=outlet5),
+        MenuItem(name="Chicken Biryani", description="Fragrant rice with spiced chicken", price=1000, category="Main", outlet=outlet6),
+        MenuItem(name="Coconut Rice", description="Rice cooked in coconut milk", price=600, category="Side", outlet=outlet6),
+        MenuItem(name="Fish Curry", description="Coconut fish curry", price=1400, category="Main", outlet=outlet6),
+        MenuItem(name="Classic Burger", description="Beef patty with lettuce and tomato", price=800, category="Main", outlet=outlet7),
+        MenuItem(name="Chicken Burger", description="Grilled chicken breast burger", price=750, category="Main", outlet=outlet7),
+        MenuItem(name="Fries", description="Crispy golden fries", price=400, category="Side", outlet=outlet7),
+        MenuItem(name="California Roll", description="Avocado and crab roll", price=1200, category="Main", outlet=outlet8),
+        MenuItem(name="Salmon Nigiri", description="Fresh salmon over rice", price=1500, category="Main", outlet=outlet8),
+        MenuItem(name="Miso Soup", description="Traditional soybean soup", price=500, category="Starter", outlet=outlet8),
+        MenuItem(name="Butter Chicken", description="Creamy tomato chicken curry", price=1300, category="Main", outlet=outlet9),
+        MenuItem(name="Dal Curry", description="Lentil curry with spices", price=700, category="Main", outlet=outlet9),
+        MenuItem(name="Buddha Bowl", description="Mixed vegetables and quinoa", price=900, category="Main", outlet=outlet10),
+        MenuItem(name="Green Smoothie", description="Spinach, banana, and mango", price=500, category="Drink", outlet=outlet10),
+        MenuItem(name="Veggie Wrap", description="Fresh vegetables in a tortilla", price=700, category="Main", outlet=outlet10),
+        ]
     db.session.add_all(items)
 
     tables = [

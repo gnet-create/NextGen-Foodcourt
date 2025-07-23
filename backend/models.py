@@ -72,6 +72,8 @@ class Outlet(db.Model, SerializerMixin):
     contact = db.Column(db.String)
     img_url = db.Column(db.String)
     cuisine_id = db.Column(db.Integer, db.ForeignKey('cuisines.id'))
+    description = db.Column(db.String)
+
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     owner = db.relationship('User', back_populates='outlets')

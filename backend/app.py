@@ -128,7 +128,7 @@ class CuisineDetails(Resource):
 class OutletLists(Resource):
     def get(self):
         outlets = Outlet.query.all()
-        return [outlet.to_dict(rules=('-cuisine', '-menu_items', '-owner',)) for outlet in outlets]   
+        return [outlet.to_dict(rules=( '-menu_items', '-owner',)) for outlet in outlets]   
 
     def post(self):
        data = request.get_json()
@@ -136,6 +136,8 @@ class OutletLists(Resource):
            outlet = Outlet(
                name=data['name'],
                contact=data['contact'],
+               img_url=data['img_url'],
+               description=['description'],
                cuisine_id=data['cuisine_id'],
                owner_id=data['owner_id']
            )
@@ -162,6 +164,10 @@ class OutletDetails(Resource):
            outlet.name = data['name']
        if 'contact' in data:
            outlet.contact = data['contact']
+       if 'img_url' in data:
+            outlet.img_url = data['img_url']
+       if 'description' in data:
+           outlet.description = data['description']
        if 'cuisine_id' in data:
            outlet.cuisine_id = data['cuisine_id']
        if 'owner_id' in data:
