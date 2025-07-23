@@ -29,10 +29,11 @@ with app.app_context():
 
     db.session.add_all([customer1, customer2, owner1, owner2, owner3, owner4])
     
-    italian = Cuisine(name="Italian", img_url="https://example.com/italian.jpg")
-    chinese = Cuisine(name="Chinese", img_url="https://example.com/chinese.jpg")
-    indian = Cuisine(name="Indian", img_url="https://example.com/indian.jpg")
-    mexican = Cuisine(name="Mexican", img_url="https://example.com/mexican.jpg")
+    italian = Cuisine(name="Italian", img_url="https://images.pexels.com/photos/1633578/pexels-photo-1633578.jpeg?auto=compress&cs=tinysrgb&w=400")
+    chinese = Cuisine(name="Chinese", img_url="https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg?auto=compress&cs=tinysrgb&w=400")
+    indian = Cuisine(name="Indian", img_url="https://images.pexels.com/photos/1410235/pexels-photo-1410235.jpeg?auto=compress&cs=tinysrgb&w=400")
+    mexican = Cuisine(name="Mexican", img_url="https://images.pexels.com/photos/357756/pexels-photo-357756.jpeg?auto=compress&cs=tinysrgb&w=400")
+    
     db.session.add_all([italian, chinese, indian, mexican])
 
     outlet1 = Outlet(name="Pasta Palace", contact="0700111222", cuisine=italian, owner=owner1, img_url="https://example.com/pasta-palace.jpg")
