@@ -36,52 +36,6 @@ export interface Review {
   date: string;
 }
 
-export interface Owner {
-  id: string;
-  name: string;
-  email: string;
-  restaurantId: string;
-}
-
-export const owners: Owner[] = [
-  {
-    id: '1',
-    name: 'Alice Mwangi',
-    email: 'alice@tamutamu.com',
-    restaurantId: '1', // Tamu Tamu Grills
-  },
-  {
-    id: '2',
-    name: 'Brian Otieno',
-    email: 'brian@swahiliplates.com',
-    restaurantId: '2', // Swahili Plates
-  },
-  {
-    id: '3',
-    name: 'Christine Wanjiku',
-    email: 'christine@burgerbros.com',
-    restaurantId: '3', // Burger Bros
-  },
-  {
-    id: '4',
-    name: 'David Kimani',
-    email: 'david@sushispot.com',
-    restaurantId: '4', // Sushi Spot
-  },
-  {
-    id: '5',
-    name: 'Evelyn Njeri',
-    email: 'evelyn@spicegarden.com',
-    restaurantId: '5', // Spice Garden
-  },
-  {
-    id: '6',
-    name: 'Frank Otieno',
-    email: 'frank@greenbowl.com',
-    restaurantId: '6', // Green Bowl
-  }
-];
-
 export const restaurants: Restaurant[] = [
   {
     id: '1',

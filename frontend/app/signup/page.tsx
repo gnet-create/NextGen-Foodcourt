@@ -2,137 +2,217 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/navigation';
 
+export default function Signup() {
+  const router = useRouter();
 
-
-export default function Login() {
-const router = useRouter();
-
-  
-const [formData, setFormData] = useState({
-    email: "",
-    password: ""
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    phone: '',
+    userType: 'user'
   });
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  const { email, password } = formData;
-
-  if (!email || !password) {
-    return toast.error("Please enter both email and password.");
-  }
-
-  try {
-    const res = await fetch("http://localhost:5555/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ email, password }),
-    });
-
-    const data = await res.json();
-    console.log(data)
-
-    if (res.ok) {
-      localStorage.setItem("access_token", data.access_token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      toast.success("Login successful!");
-
-      setTimeout(() => {
-        if (data.user.role === 'owner') {
-          router.push('/owner-dashboard');
-        } else {
-          router.push('/');
-        }
-      }, 1500);
-    } else {
-      toast.error(data.message || "Login failed. Please try again.");
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
+      alert('Please fill in all required fields!');
+      return;
     }
-  } catch (error) {
-    toast.error("Server error. Please try again later.");
-  }
-};
 
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match!');
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      alert('Password must be at least 6 characters long!');
+      return;
+    }
+
+    if (formData.userType === 'owner') {
+      
+      localStorage.setItem('userType', 'owner');
+      localStorage.setItem('userName', `${formData.firstName} ${formData.lastName}`);
+      window.location.href = '/owner-dashboard';
+    } else {
+     
+      localStorage.setItem('userType', 'customer');
+      localStorage.setItem('userName', `${formData.firstName} ${formData.lastName}`);
+      alert(`User account created for: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}`);
+      router.push('/order');
+    }
+  };
 
   return (
-    <div className="max-w-md mx-auto">
-      <div className="bg-white rounded-lg shadow-md p-8">
-        
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Welcome Back</h1>
-          <p className="text-gray-600">Sign in to your account to continue</p>
+    <div className="min-h-screen flex">
+      
+      <div className="hidden lg:flex lg:w-1/2 relative">
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: 'url(https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800)'
+          }}
+        />
+        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+          <div className="text-center text-white">
+            <h1 className="text-4xl font-bold mb-4">FoodCourt Hub</h1>
+            <p className="text-xl">Join our community of food lovers and restaurant owners</p>
+          </div>
         </div>
-
-        
-        <form onSubmit={handleSubmit} className="space-y-6">
-        
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email Address
-            </label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-              placeholder="Enter your email"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-              placeholder="Enter your password"
-              required
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300 rounded"
-              />
-              <label className="ml-2 block text-sm text-gray-700">
-                Remember me
-              </label>
-            </div>
-            <button type="button" className="text-sm text-amber-600 hover:text-amber-500">
-              Forgot password?
-            </button>
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-amber-500 text-white py-2 px-4 rounded-md hover:bg-amber-600 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors"
-          >
-            Sign In
-          </button>
-        </form>   
-
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
-            Don't have an account?{' '}
-            <Link href="/signup" className="text-amber-600 hover:text-amber-500 font-medium">
-              Sign up here
-            </Link>
-          </p>
-        </div>
-
-     
       </div>
-        <ToastContainer position="top-right" autoClose={3000} />
+
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+        <div className="max-w-md w-full">
+         
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">Create Account</h1>
+            <p className="text-gray-600">Join us to start ordering and reserving tables</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+           
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Account Type *
+              </label>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, userType: 'user' })}
+                  className={`p-4 border-2 rounded-lg text-center transition-colors ${
+                    formData.userType === 'user' 
+                      ? 'border-amber-500 bg-amber-50 text-amber-700' 
+                      : 'border-gray-300 hover:border-gray-400'
+                  }`}
+                >
+                  <div className="font-medium">Customer</div>
+                  <div className="text-sm text-gray-600">Order food & reserve tables</div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, userType: 'owner' })}
+                  className={`p-4 border-2 rounded-lg text-center transition-colors ${
+                    formData.userType === 'owner' 
+                      ? 'border-amber-500 bg-amber-50 text-amber-700' 
+                      : 'border-gray-300 hover:border-gray-400'
+                  }`}
+                >
+                  <div className="font-medium">Restaurant Owner</div>
+                  <div className="text-sm text-gray-600">Manage your restaurant</div>
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  First Name *
+                </label>
+                <input
+                  type="text"
+                  value={formData.firstName}
+                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  placeholder="Veroline"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Last Name *
+                </label>
+                <input
+                  type="text"
+                  value={formData.lastName}
+                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  placeholder="Ouma"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Email Address *
+              </label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                placeholder="Veroline@example.com"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                placeholder="+254 700 000 000"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Password *
+              </label>
+              <input
+                type="password"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                placeholder="Minimum 6 characters"
+                required
+                minLength={6}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Confirm Password *
+              </label>
+              <input
+                type="password"
+                value={formData.confirmPassword}
+                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                placeholder="Repeat your password"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-amber-500 text-white py-3 px-4 rounded-md hover:bg-amber-600 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors font-medium"
+            >
+              Create {formData.userType === 'owner' ? 'Owner' : 'Customer'} Account
+            </button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600">
+              Already have an account?{' '}
+              <Link href="/login" className="text-amber-600 hover:text-amber-500 font-medium">
+                Log in here
+              </Link>
+            </p>
+          </div>
+
+        </div>
+      </div>
     </div>
   );
 }

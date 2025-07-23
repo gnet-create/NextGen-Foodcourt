@@ -12,7 +12,7 @@ A food court is an area within a shopping mall that offers a wide range of food 
 
 ## Problem Statement
 
-Nextgen Mall’s food court is busy and culturally diverse, but the manual ordering system is inefficient and confusing. The goal is to digitize the customer experience, improve order management for outlets, and reduce crowding and order error.
+Nextgen Mall’s food court is busy and culturally diverse, but the manual ordering system is inefficient and confusing. The goal is to digitize the customer experience, improve order management for outlets, and reduce crowding and order errors.
 
 ---
 
@@ -65,5 +65,3 @@ Nextgen Mall’s food court is busy and culturally diverse, but the manual order
 ```bash
 git clone https://github.com/OumaMichael/NextGen-Foodcourt
 cd NextGen-Foodcourt
-
----
