@@ -2,25 +2,38 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/navigation';
+
 
 export default function Signup() {
 
+   const router = useRouter();
+
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
     password: '',
     confirmPassword: '',
     phone: '',
-    userType: 'user'
+    userType: 'customer'
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit =  async (e: React.FormEvent) => {
     e.preventDefault();
+
+      const { name, email, password, confirmPassword, phone, userType } = formData;
+
     
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
+    if (!formData.name || !formData.email || !formData.password) {
       alert('Please fill in all required fields!');
       return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return toast.error("Please enter a valid email address.");
     }
 
     if (formData.password !== formData.confirmPassword) {
@@ -33,18 +46,38 @@ export default function Signup() {
       return;
     }
 
-    if (formData.userType === 'owner') {
-      
-      localStorage.setItem('userType', 'owner');
-      localStorage.setItem('userName', `${formData.firstName} ${formData.lastName}`);
-      window.location.href = '/owner-dashboard';
+     try {
+    const res = await fetch('http://localhost:5555/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        phone_no: phone,
+        role: userType
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      toast.success('Registered successfully!');
+      setTimeout(() => {
+        if (userType === 'owner') {
+          router.push('/owner-dashboard');
+        } else {
+          router.push('/');
+        }
+      }, 2000);
     } else {
-     
-      localStorage.setItem('userType', 'customer');
-      localStorage.setItem('userName', `${formData.firstName} ${formData.lastName}`);
-      alert(`User account created for: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}`);
+      toast.error(data.message || 'Registration failed. Try again.');
     }
+  } catch (err) {
+    toast.error('Server error. Please try again later.');
+  }
   };
+
 
   return (
     <div className="min-h-screen flex">
@@ -81,7 +114,7 @@ export default function Signup() {
               <div className="grid grid-cols-2 gap-4">
                 <button
                   type="button"
-                  onClick={() => setFormData({ ...formData, userType: 'user' })}
+                  onClick={() => setFormData({ ...formData, userType: 'customer' })}
                   className={`p-4 border-2 rounded-lg text-center transition-colors ${
                     formData.userType === 'user' 
                       ? 'border-amber-500 bg-amber-50 text-amber-700' 
@@ -106,33 +139,19 @@ export default function Signup() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  First Name *
-                </label>
-                <input
-                  type="text"
-                  value={formData.firstName}
-                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                  placeholder="Veroline"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Last Name *
-                </label>
-                <input
-                  type="text"
-                  value={formData.lastName}
-                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                  placeholder="Ouma"
-                  required
-                />
-              </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Name *
+              </label>
+              <input
+                type="name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                placeholder="John Doe"
+                required
+              />
             </div>
 
             <div>
@@ -210,6 +229,7 @@ export default function Signup() {
 
         </div>
       </div>
+          <ToastContainer position="top-right" autoClose={1000} />
     </div>
   );
 }
