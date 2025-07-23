@@ -33,7 +33,7 @@ export default function Home() {
       <div className="mb-16">
         <div className="text-center mb-8">
           <h2 className="text-4xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-6">
-            Browse by Restaurant
+            Discover Your Next Favorite Spot
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Explore all our restaurant partners and discover what each outlet has to offer
@@ -79,7 +79,7 @@ export default function Home() {
       <div className="mb-16">
         <div className="text-center mb-8">
           <h2 className="text-4xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-6">
-            Browse by Cuisines
+            Crave It, Find It
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Discover restaurants by your favorite cuisine type and find exactly what you're craving
