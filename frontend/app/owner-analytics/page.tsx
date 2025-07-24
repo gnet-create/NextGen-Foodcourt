@@ -7,7 +7,7 @@ import { TrendingUp, DollarSign, Package, Users } from 'lucide-react';
 export default function OwnerAnalytics() {
   const [selectedPeriod, setSelectedPeriod] = useState('week');
 
-  const isOwner = typeof window !== 'undefined' && localStorage.getItem('userType') === 'owner';
+  const isOwner = typeof window !== 'undefined' && localStorage.getItem('userType') === 'admin';
 
   if (!isOwner) {
     return (

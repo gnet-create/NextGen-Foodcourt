@@ -78,19 +78,24 @@ export default function Home() {
             <Link
               key={restaurant.id}
               href={`/order?outlet=${restaurant.id}`}
-              className="no-underline bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:scale-105 cursor-pointer"
+              className="no-underline bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:scale-105 cursor-pointer flex flex-col h-80"
             >
               <div
-                className="h-56 w-full bg-cover bg-center"
+                className="h-48 w-full bg-cover bg-center flex-shrink-0"
                 style={{ backgroundImage: `url(${getValidImageUrl(restaurant.img_url)})` }}
               />
-              <div className="p-6 text-center">
+              <div className="p-6 text-center flex flex-col justify-between flex-grow">
+                <div>
                 <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
                   {restaurant.name}
                 </h3>
                 <p className="text-lg text-orange-600 dark:text-orange-400 font-semibold">
                   {restaurant.cuisine.name} Cuisine
                 </p>
+                </div>
+                <button className="mt-4 bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:from-orange-600 hover:to-red-600 transition-all duration-300">
+                  Order Now
+                </button>
               </div>
             </Link>
           ))}
@@ -121,15 +126,15 @@ export default function Home() {
             <Link
               key={cuisine.id}
               href={`/browse-cuisines?cuisine=${cuisine.name}`}
-              className="no-underline bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:scale-105 cursor-pointer"
+              className="no-underline bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:scale-105 cursor-pointer flex flex-col h-48"
             >
               <div
-                className="h-32 w-full bg-cover bg-center"
+                className="h-32 w-full bg-cover bg-center flex-shrink-0"
                 style={{
                   backgroundImage: `url(${getValidImageUrl(cuisine.img_url)})`,
                 }}
               />
-              <div className="p-4">
+              <div className="p-4 flex-grow flex items-center justify-center">
                 <p className="text-lg font-semibold text-gray-800 dark:text-white text-center">
                   {cuisine.name}
                 </p>
@@ -151,26 +156,41 @@ export default function Home() {
       <div className="grid md:grid-cols-3 gap-8">
         <Link
           href="/popular-dishes"
-          className="no-underline bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-center"
+          className="no-underline bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-center flex flex-col justify-between h-48"
         >
+          <div>
           <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Popular Dishes</h3>
           <p className="text-lg text-gray-600 dark:text-gray-300">See what everyone's ordering today</p>
+          </div>
+          <button className="mt-4 bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:from-orange-600 hover:to-red-600 transition-all duration-300">
+            View Dishes
+          </button>
         </Link>
 
         <Link
           href="/reservations"
-          className="no-underline bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-center"
+          className="no-underline bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-center flex flex-col justify-between h-48"
         >
+          <div>
           <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Reserve Table</h3>
           <p className="text-lg text-gray-600 dark:text-gray-300">Book your spot in advance</p>
+          </div>
+          <button className="mt-4 bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:from-orange-600 hover:to-red-600 transition-all duration-300">
+            Reserve Now
+          </button>
         </Link>
 
         <Link
           href="/reviews"
-          className="no-underline bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-center"
+          className="no-underline bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-center flex flex-col justify-between h-48"
         >
+          <div>
           <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Customer Reviews</h3>
           <p className="text-lg text-gray-600 dark:text-gray-300">Read what others are saying</p>
+          </div>
+          <button className="mt-4 bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:from-orange-600 hover:to-red-600 transition-all duration-300">
+            Read Reviews
+          </button>
         </Link>
       </div>
     </div>

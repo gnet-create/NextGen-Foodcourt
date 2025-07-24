@@ -20,8 +20,8 @@ export default function Login() {
 
     if (formData.email.includes('owner') || formData.email.includes('@tamugrills.com') || formData.email.includes('@swahiliplates.com')) {
       
-      localStorage.setItem('userType', 'owner');
-      localStorage.setItem('userName', 'Restaurant Owner');
+      localStorage.setItem('userType', 'admin');
+      localStorage.setItem('userName', 'Admin');
       window.location.href = '/owner-dashboard';
     } else {
       

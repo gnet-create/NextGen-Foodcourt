@@ -64,7 +64,7 @@ export default function Signup() {
     if (res.ok) {
       toast.success('Registered successfully!');
       setTimeout(() => {
-        if (userType === 'owner') {
+        if (userType === 'admin') {
           router.push('/owner-dashboard');
         } else {
           router.push('/');
@@ -116,8 +116,8 @@ export default function Signup() {
                   type="button"
                   onClick={() => setFormData({ ...formData, userType: 'customer' })}
                   className={`p-4 border-2 rounded-lg text-center transition-colors ${
-                    formData.userType === 'user' 
-                      ? 'border-amber-500 bg-amber-50 text-amber-700' 
+                    formData.userType === 'customer' 
+                      ? 'border-orange-500 bg-orange-50 text-orange-700' 
                       : 'border-gray-300 hover:border-gray-400'
                   }`}
                 >
@@ -126,14 +126,14 @@ export default function Signup() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setFormData({ ...formData, userType: 'owner' })}
+                  onClick={() => setFormData({ ...formData, userType: 'admin' })}
                   className={`p-4 border-2 rounded-lg text-center transition-colors ${
-                    formData.userType === 'owner' 
-                      ? 'border-amber-500 bg-amber-50 text-amber-700' 
+                    formData.userType === 'admin' 
+                      ? 'border-orange-500 bg-orange-50 text-orange-700' 
                       : 'border-gray-300 hover:border-gray-400'
                   }`}
                 >
-                  <div className="font-medium">Restaurant Owner</div>
+                  <div className="font-medium">Admin</div>
                   <div className="text-sm text-gray-600">Manage your restaurant</div>
                 </button>
               </div>
@@ -212,9 +212,9 @@ export default function Signup() {
 
             <button
               type="submit"
-              className="w-full bg-amber-500 text-white py-3 px-4 rounded-md hover:bg-amber-600 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors font-medium"
+              className="w-full bg-orange-500 text-white py-3 px-4 rounded-md hover:bg-orange-600 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-colors font-medium"
             >
-              Create {formData.userType === 'owner' ? 'Owner' : 'Customer'} Account
+              Create {formData.userType === 'admin' ? 'Admin' : 'Customer'} Account
             </button>
           </form>
 

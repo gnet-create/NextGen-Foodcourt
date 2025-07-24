@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { restaurants, tables, owners } from '@/lib/data';
 
 export default function OwnerDashboard() {
@@ -128,18 +129,18 @@ export default function OwnerDashboard() {
       <div className="mt-8 bg-white rounded-lg shadow-md p-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h2>
         <div className="grid md:grid-cols-4 gap-4">
-          <button className="bg-amber-500 text-white px-4 py-3 rounded-lg font-medium hover:bg-amber-600 transition-colors">
-            Add New Dish
-          </button>
-          <button className="bg-blue-500 text-white px-4 py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors">
-            Update Prices
-          </button>
-          <button className="bg-green-500 text-white px-4 py-3 rounded-lg font-medium hover:bg-green-600 transition-colors">
-            View Orders
-          </button>
-          <button className="bg-purple-500 text-white px-4 py-3 rounded-lg font-medium hover:bg-purple-600 transition-colors">
+          <Link href="/owner-dashboard/menu" className="bg-orange-500 text-white px-4 py-3 rounded-lg font-medium hover:bg-orange-600 transition-colors text-center block">
+            Manage Menu
+          </Link>
+          <Link href="/owner-dashboard/order-management" className="bg-blue-500 text-white px-4 py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors text-center block">
+            Order Management
+          </Link>
+          <Link href="/owner-dashboard/analytics" className="bg-green-500 text-white px-4 py-3 rounded-lg font-medium hover:bg-green-600 transition-colors text-center block">
             Analytics
-          </button>
+          </Link>
+          <Link href="/owner-dashboard/reservations" className="bg-purple-500 text-white px-4 py-3 rounded-lg font-medium hover:bg-purple-600 transition-colors text-center block">
+            Manage Reservations
+          </Link>
         </div>
       </div>
     </div>
