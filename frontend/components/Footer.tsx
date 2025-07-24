@@ -11,7 +11,7 @@ export default function Footer() {
           
           <div className="md:col-span-1">
             <h3 className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent mb-4">
-              FoodCourt Hub
+              NextGen FoodCourt
             </h3>
             <p className="text-gray-400 mb-4 text-lg">
               Experience the future of dining with our innovative shared seating food court.

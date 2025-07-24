@@ -52,7 +52,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-purple-900/60 flex items-center justify-center">
           <div className="text-center text-white px-4">
             <h1 className="text-6xl font-bold mb-8 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-              Welcome to FoodCourt Hub
+              Welcome to NextGen FoodCourt
             </h1>
             <p className="text-2xl max-w-4xl mx-auto leading-relaxed">
               Discover amazing cuisines from multiple restaurants all in one place.
